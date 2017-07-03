@@ -1,0 +1,149 @@
+\section{Model Specification}
+
+We develop six hierarchical Bayesian mixed linear models to instantiate the theoretically relevant positions that all people exhibit serial processing, all people exhibit parallel processing, all people exhibit coactive processing, or that there is variation in processing architecture across people.  
+
+<<figModePred, cache = T, echo = F, message = F, warning = F>>=
+source('figModPred.R')
+@
+
+\begin{figure}
+\centering
+\includegraphics[width=4in]{figModPred.pdf}
+\caption{Model specification and predictions as shown for two individuals' parameters $\gamma_1$ and $\gamma_2$. Darker areas denote greater probability density. {\bf Condition Model.} Specifications are made conditional on group parameters (mean=0, sd=.07).   {\bf Marignal Model.}  The specification is marginalized over the priors on group parameters.  The hierarchical structure induces correlations between $\gamma_1$ and $\gamma_2$. {\bf Predictions.} Models yield predictions on observed MICs, and the role of sample noise is to smear the structure in the model. Bayesian model comparison consists of comparing these predictions at the observed data.}
+\label{spec}
+\end{figure}
+
+Let $Y_{ijk\ell}$ be the $\ell$th response time for the $i$th participant in the $j$th level of Factor A and the $k$th level of Factor B, $i=1,\ldots,I$, $j=1,2$, $k=1,2$, and $\ell=1,\ldots,L_{ijk}$:
+\begin{eq}\label{base}
+Y_{ijk\ell} \sim \mbox{Normal}\left(\tau_{ijk},\sigma^2\right),
+\end{eq}
+The cell mean parameters $\tau$ are additively decomposed as
+\begin{eq} \label{linmod}
+\tau_{ijk} = \mu+ \eta_i + \alpha_{i}s(j)+ \beta_{i}s(k) + \gamma_i s(j)s(k),
+\end{eq}
+where $s(m) =(-1)^m$ for $m=1,2$.   The parameter $\mu$ is the grand mean, $\eta_i$, $\alpha_i$, $\beta_i$, $\gamma_i$ describe the $i$th participant's overall deviation from grand mean, main effect for Factor A, main effect
+ for factor B, and interaction, respectively.  The function $s$ is a compact means of imposing the usual sums-to-zero balance constraints in linear models.  This parameterization is similar to classic ANOVA parameterizations though it holds for each participant rather than across participants.  
+
+With this specification, $M_i$, the true interaction contrast is $\gamma_i$.
+
+The serial architecture is straightforwardly implemented by placing the following constraints on  $\gamma_i$:
+\begin{eqa}
+\mbox{Serial:} && \gamma_i=0.
+\end{eqa}
+One way of understanding this specification and the ones that follow is to plot the interaction term for one individual as a function of another. The first column in Figure~\ref{spec}, labeled ``Conditional Models," illustrates the model specifications for two individuals' interaction terms, $\gamma_1$ and $\gamma_2$. The restriction of the serial model, that all $\gamma_i=0$, is shown in the first row of Figure~\ref{spec}. 
+
+Parallel models imply that each $\gamma_i<0$.  One way of instantiating this implication is 
+\begin{eqa}
+\mbox{Parallel-1}&& \gamma_i=\nu_\gamma, \;\;\nu_\gamma<0.
+\end{eqa}
+Here, all participants share a common value, $\nu_\gamma$, that is constrained to be negative.  The constraint that all $\gamma_i$ are the same and negative is shown in the second row of Figure~\ref{spec} (first column).  Here, the equality constraint is represented by the diagonal line. The line is darker the closer it is to (0, 0), denoting that smaller values of $\nu_\gamma$ are more likely than larger ones.  We will make a prior assumption subsequently to this effect.
+
+A second instantiation of the parallel model is
+\begin{eqa}
+\mbox{Parallel-2:}&& \gamma_i \sim \mbox{Normal}_-(\nu_\gamma,g_\gamma\sigma^2),
+\end{eqa}
+where $\mbox{Normal}_-$ denotes a normal distribution truncated above at zero. In this specification, each participant has their own unique interaction parameter, and all of these parameters are constrained to be negative.  The variance in parallel-2 is the product of $g_\gamma$ and $\sigma^2$.  This approach of placing priors on a parameter $g$ was introduced by \textcite{Zellner:Siow:1980} and is popular for analysis of linear models \parencite{Bayarri:Garcia-Donato:2007,Liang:etal:2008,Rouder:etal:2012,Rouder:Morey:2012}.   The parameter $g$ may be viewed as a variance of $\gamma_i/\sigma$, each individual's true MIC measured in effect-size units rather than in time units.
+
+An example of a parallel-2 model is shown in the first column and third row of Figure~\ref{spec}, where there is mass throughout the relevant lower-left quadrant.  To draw the figure, we set $\nu_\gamma=0$ and $g_\gamma\sigma^2=.07^2$.  For these settings, there is more mass close to the origin, (0, 0), denoting that smaller magnitudes for both, $\gamma_1$ and $\gamma_2$, are more likely. The parallel-2 specification is far more flexible than parallel-1 as it allows for individual variation.  Parallel-1, in contrast, is far more compact with a model dimensionality of a single parameter rather than $I$ parameters.  Parallel-1 may be a preferred description when there are not sufficient observations per participant to resolve true participant variability.  Moreover, the parallel-1 model is comparable in parsimony to the serial model in that there is no individual variability in either specification.
+
+Coactive models imply that each $\gamma_i>0$, and we use the same two specifications.
+\begin{eqa}
+\mbox{Coactive-1:}&& \gamma_i=\nu_\gamma,\;\;\nu_\gamma>0,\\
+\mbox{Coactive-2:}&& \gamma_i \sim \mbox{Normal}_+(\nu_\gamma,g_\gamma\sigma^2).
+\end{eqa}
+As with the parallel models, the second specification captures individual differences in the interaction while the first one does not.  Both specifications are shown in the first column of Figure~\ref{spec} (fourth and fifth row), and for coactive-2, the settings are $\nu_\gamma=0$ and $g_\gamma\sigma^2=.07^2$.
+
+In these models, all participants share a common architecture; that is, either everyone displays serial processing, everyone displays parallel processing, or everyone displays coactive processing.  These models are parsimonious in that they do not specify differences across people allowing for a straightforward interpretation and easy generalization to larger populations.  But it might be that people truly vary.  Some might truly perform the task in a serial fashion; others might truly perform the task in a parallel fashion, and still others might truly perform the task in a coactive fashion.  To account for this possibility, we included a general model:
+\begin{eqa}
+\mbox{General:} && \gamma_i \sim \mbox{Normal}(\nu_\gamma,g_\gamma\sigma^2).
+\end{eqa}  
+There are no constraints on $\gamma_i$ other than the parametric shape specification.  A graphical representation is shown in the last row, first column of Figure~\ref{spec}.
+
+\subsection{Misspecification}
+ 
+The advantage of the normal specification in (\ref{base}) are two-fold: (i) the normal is computationally convenient in this application leading to rapid model development and quickly converging chains, and (ii) the MIC is easily parameterized and the placement of constraint, say that MIC must be positive, is straightforward to implement.  These advantages are substantial, yet researchers may be concerned about the misspecification of the normal.  RT is skewed rather than symmetric, and the standard deviation tends to increase with the mean \parencite{Wagenmakers:Brown:2007,Luce:1986,Rouder:etal:2010d}.  
+
+Yet, we think any concern is misplaced.  The main reason is that the logical-rules variant of systems factorial technology that we employ here uses expected values of cell means in drawing inferences about architecture.  This point is critical---if we knew the true values of the cell means, we would not need to know the true shapes or true variances.  The inference here has all the robustness of ANOVA or regression, which is highly robust for skewed distributions, so long as the left tail is thin.  Indeed, RTs tend to have thin left tails that fall off no slower than an exponential \parencite{Burbeck:Luce:1982,VanZandt:2000,Wenger:Gibson:2004}.  Hence, we are not worried about the skewness of RT.  
+
+More pressing is the known positive relation between mean and variance, which violates the homogeneity assumption made above.  The usual course is to propose a variance-stabilizing transform, say take the logarithm of RT after subtracting a minimum residual \parencite[e.g.,][]{Rouder:etal:2015}.  Yet, this approach cannot be used here because it may affect the sign of the interaction term.  If $\mbox{MIC} = 0$ in the untransformed space, then it will be negative in the log-transformed one.  Hence, we cannot simply apply such a transformation.   Yet, we think the heterogeneity is not problematic.  The issue here is that heterogeneity is marginally violated given the relatively small experimental effects.  Variance is most heterogeneous in Experiment 2b reported subsequently.  But even here, averaged variances within the four cells differ by about 30\%.  This is a small degree of heterogeneity compared to those usually studied for robustness.  We had to search to find studies that used this small degree as most use variances that differ by a factor of 2 (100\%) or more.  Perhaps the closest match is \textcite{Rogan:Keselman:1977}, who simulated data from  variances that differ by as little as 50\%.  They found for the 50\% variance case, the Type I error rates were just slightly inflated---they were at .053 for nominal .05 levels.  Such a result indicates a high degree of stability of the sampling distribution of $F$ in the face of the degree of heterogeneity present in our data.  In some of the models we analyze, these $F$ statistics are sufficient statistics \parencite{Liang:etal:2008,Morey:etal:2011a}, and as such, we are not worried about the small violations of heterogeneity.  
+
+\subsection{Prior Specification}
+
+Bayesian analysis proceeds with specification of priors on all parameters.  Consider the most richly parameterized model, the general model.  We follow Rouder et al.'s multiple $g$-prior approach for factorial designs (2012).  In the $g$-prior setup, parameters $\mu$ and $\sigma$ are treated as parameters that locate and scale the models.  They are common in all models, and as such, noninformative reference priors may be placed upon them, $\pi(\mu,\sigma^2) \propto 1/\sigma^2$ \parencite{Jeffreys:1961}.  The remaining parameters have $g$-prior specifications are as follows:
+\begin{eqa*}
+\eta_i &\sim & \mbox{Normal}(0,g_\eta\sigma^2),\\
+\alpha_i &\sim & \mbox{Normal}(\nu_\alpha,g_\alpha\sigma^2),\\
+\beta_i &\sim & \mbox{Normal}(\nu_\beta,g_\beta\sigma^2),\\
+\gamma_i &\sim & \mbox{Normal}(\nu_\gamma,g_\gamma\sigma^2).\\
+\end{eqa*}
+Specification is needed for mean parameters $(\nu_\alpha,\nu_\beta,\nu_\gamma)$ as well as variance multipliers $(g_\eta,g_\alpha,g_\beta,g_\beta)$.  The usual course is to use normal and inverse-gamma distributions for mean and variance multipliers respectively:
+\begin{eqa*}
+\nu_\alpha &\sim & \mbox{Normal}(0,g_{\nu_\alpha}\sigma^2),\\
+\nu_\beta &\sim & \mbox{Normal}(0,g_{\nu_\beta}\sigma^2),\\
+\nu_\gamma  &\sim & \mbox{Normal}(0,g_{\nu_\gamma}\sigma^2).
+\end{eqa*}
+and
+\begin{eqa*}
+g_\eta &\sim & \mbox{Inverse Gamma}\left(\frac{1}{2},\frac{r^2_\eta}{2}\right),\\
+g_\alpha &\sim & \mbox{Inverse Gamma}\left(\frac{1}{2},\frac{r^2_\alpha}{2}\right),\\
+g_\beta &\sim & \mbox{Inverse Gamma}\left(\frac{1}{2},\frac{r^2_\beta}{2}\right),\\
+g_\gamma &\sim & \mbox{Inverse Gamma}\left(\frac{1}{2},\frac{r^2_\gamma}{2}\right),\\
+g_{\nu_\alpha} &\sim & \mbox{Inverse Gamma}\left(\frac{1}{2},\frac{r^2_{\nu_\alpha}}{2}\right),\\
+g_{\nu_\beta} &\sim & \mbox{Inverse Gamma}\left(\frac{1}{2},\frac{r^2_{\nu_\beta}}{2}\right),\\
+g_{\nu_\gamma} &\sim & \mbox{Inverse Gamma}\left(\frac{1}{2},\frac{r^2_{\nu_\gamma}}{2}\right).\\
+\end{eqa*}
+
+The vector $\bfr=(r_\eta,r_\alpha,r_\beta,r_\gamma,r_{\nu_\alpha},r_{\nu_\beta},r_{\nu_\gamma})$ are prior settings for the models, and values must be chosen before hand.  The values set the {\em scale} on the variabilities of the relevant parameters.  We are not directly setting how much variability there is in a mean effect or the variability of effects, but, coarsely, how variable the prior on variability is.  These settings must be reasonable. They are scales on variabilities, and as such, represent approximate expectations of these variabilities.  We justify the settings below and address how the choices affect inference in a separate section following data analysis.
+
+These scale settings may be set by using known regularities in RT.  The latencies analyzed here are fairly slow for perception and working memory tasks with RTs averaging over 1 second.  For latencies in this range, the standard deviation for repeated observations (same person, same condition), $\sigma,$ is around 600 ms or so \parencite{Wagenmakers:Brown:2007}.  The scale settings are made relative to $\sigma$.  Consider $r_\eta$, the variability of individual's overall speed, for example.  In our experience across many tasks, we find the mean of individuals to be about as variable as repeated observations.  For example, suppose one individual is relatively fast and has RTs between say 300ms and 600 ms, a relatively slow individual would have responses between 600 ms and 900 ms.  In this sense the variability across the means of people is on the order of the variability within a person.  Hence, we set $r_\eta=1$ to convey this knowledge.  Mean effects, on the other hand, might be around 90 ms, or 15\% of $\sigma$.  This calculation provides for the setting that $r_{\nu_\alpha}=r_{\nu_\beta}=r_{\nu_\gamma}= .15$  The settings of $(r_\alpha,r_\beta,r_\gamma)$ reflect the scale of {\em a priori} variability across individuals in these effects.   We figure that under a general model without constraint, people would be spread no more than 100 ms in their true effect, and quite possibly less.  As a middle-of-the-road position, we use 60 ms, 10\% of $\sigma$.  Therefore,  $r_{\nu_\alpha}=r_{\nu_\beta}=r_{\nu_\gamma}=.1$.  
+
+The remaining priors are on $\nu_\gamma$ in parallel-1 and coactive-1 models.  We use the respective half normals.  For parallel-1, $\nu_\gamma \sim \mbox{Normal}_{-}(0,r_{\gamma}\sigma^2)$; for coactive-1, $\nu_\gamma \sim \mbox{Normal}_{+}(0,r_\gamma\sigma^2)$. The setting of $r_\gamma$ is the same as above.
+
+\subsection{Hierarchical model structure}
+One of the key features of the parallel-2, coactive-2, and general models is that they specify individual variability.  Individual interactions, $\gamma_i$, are not free to vary arbitrarily.  Instead, they are constrained to follow a hierarchical structure through a common group mean, $\nu_\gamma$.  Variability in $\gamma_i$ comes either from the individual variability of the interaction term, $g_\gamma\sigma^2$, or from the variability in the mean effect, $\nu_\gamma$. The latter variability is shared between all individuals, leading to correlation among $\gamma_i$.  The second column in Figure~\ref{spec}, labeled "Marginal Models", shows these correlations for parallel-2 (third row), coactive-2 (fifth row), and general models (sixth row). In comparison to the first column, where the specification for set $\nu_\gamma$ and $g_\gamma\sigma^2$ are shown, the second column illustrates  the model specifications integrated over all possible settings of these parameters.  In this regard, the first column is a conditional specification and the second column is a marginal specification.    
+
+This correlation is impactful.  If it is small, then the model has a large dimensionality, and the effective number of interaction contrasts apporaches $I$.  If it is large, then the model dimensionality is closer to that of parallel-1 or co-active-1 with a common parameter for all individuals' interactions.  This fact, that correlation sets model dimensionality, means that prior settings that affect this correlation are going to have a large influence on inference.  The key prior settings are  $r_{\nu_\gamma}$, the scale of the prior variability of the common component, and $r_\gamma$ the scale of the prior variability of the individual component.  As $r_{\nu_\gamma} \rightarrow 0$, there is decreasing shared variability of the individuals' interaction terms, and the marginal model approaches the conditional model in Figure~\ref{spec}. For $I$ individuals, the interaction component of the model would be an $I$-dimensional ball. In contrast, as $r_\gamma \rightarrow 0$, there is no individual variability and the dimensionality of the interaction components reduces to a single parameter, like  the parallel-1 and coactive-1 models.  Since the prior settings define the dimensionality of the model, it is reasonable to expect that model comparison will be dependent on these settings.  We will address this dependency after the main analysis.
+
+
+\section{Model Comparison}
+
+\subsection{Bayes Factors}
+
+We use the Bayes factor model-comparison approach \parencite{Jeffreys:1961} to state evidence for the six models.  The Bayes factor is the direct consequence of using Bayes rule for computing the plausibility of competing models in light of data.  The key equation for comparing two models, $\calM_A$ and $\calM_B$ is
+\begin{eq}\label{brule}
+\frac{P(\calM_A|\bfY)}{P(\calM_B|\bfY)} = \frac{P(\bfY|\calM_A)}{P(\bfY|\calM_B)} \times \frac{P(\calM_A)}{P(\calM_B)},
+\end{eq}
+where the term on the left-hand side is the posterior odds for the models, the term on the far right, $\frac{P(\calM_A)}{P(\calM_B)}$ is the prior odds, and the term $\frac{P(\bfY|\calM_A)}{P(\bfY|\calM_B)}$ is the Bayes factor.  The Bayes factor is the key quantity; it denotes how analysts should update their beliefs about the models in the light of the data, $\bfY$. \textcite{Rouder:etal:2016b} make the point that because the Bayes factor describes not beliefs but how data affect beliefs, it may be viewed as the strength of evidence from the data.  
+
+There is a second equally important intepretation of the Bayes factor as predictive accuracy.  $P(\bfY|\calM_A)$, the numerator of the Bayes factor, and $P(\bfY|\calM_B)$, the denominator, are the (joint) probability density of the data under the models.  These densities are uniquely Bayesian constructs and may be viewed as predictions for a given model \parencite{Morey:etal:2016,Rouder:etal:2016b}. They are predictions in that a probability may be assigned to each possible outcome.  Some possible outcomes will have a high probabilities under the given model while other outcomes will have low probabilities. In this sense, the model is predicting how probable an outcome is. The term $P(\bfY|\calM_A)$ is exactly how probable the observed data are under model $\calM_A$. The Bayes factor therefore is  how well one model predicts the data relative to the other model, that is, the relative predictive accuracy of two models.  If the Bayes factor is 10, for example, the data are ten times more likely under Model $\calM_A$ than under Model $\calM_B$.
+
+The third column of Figure~\ref{spec} shows the predictions for the data from the six models. These predictions are smeared versions of the models specification. The darkness of a point predicts how probable it is. Model comparison may be done by comparing the density (or darkness of points) of any two models for observed data. The smearing of the model specification accounts for sampling noise. For example, the serial model predicts non-zero values of observed interaction contrast through smearing.
+
+The dimensionality of the models affect their predicitve accuracy.  Consider the parallel-1 and parallel-2 models. Both models may predict observations at $\hat{M}_{1} = -.1$ sec and $\hat{M}_2 = -.095$ sec fairly well. Still, the Bayes factor is \Sexpr{round(Parallel1P[61, 63]/Parallel2P[61, 63], 1)}-to-1 in favor of the parallel-1 model. The reason for this preference is the parsimony of the model: While the Parallel-2 model predicts all combinations of negative interactions fairly well, the parallel-1 model predicts a smaller number of combinations of observed interaction terms that are closer to the diagonal.
+
+\subsection{Computation}
+<<echo=F>>=
+I=31
+dim=1+I*4+4+7
+@
+
+Although the concept of Bayes factors is relatively simple, application is often times inconvenient and computationally difficult. The difficulty resides in calculating the probability of data given a model, $P(\bfY|\calM)$.  This probability may be expressed in conditional form as
+$P(\bfY|\calM)= \displaystyle \int_{\bftheta \in \Theta} P(\bfY|\bftheta) \pi(\bftheta) d\bftheta$, where $\bftheta$ is a vector of parameters from parameter space $\Theta$ with prior $\pi(\bftheta)$.  The integration is not at all trivial.  In most cases, the integral is highly multidimensional and does not admit closed-formed solutions.  In our case, for example, the integral for the general model in Experiment~1A comprises  \Sexpr{dim} dimensions.  More alarmingly, the integrand is often highly peaked so much so that integration is more like finding a needle in a haystack.  Numerical methods often fail, and finding computationally convenient solutions for Bayes factors in mixed settings remains timely and topical.
+
+To make the computation of Bayes factor convenient for the models at hand, we follow the development by \textcite{Haaf:Rouder:2017}. The key is the use of $g$-priors, and this form allows for a symbolic integration of all parameters in the general model up to the set of $g$ parameters \parencite{Zellner:Siow:1980}. This symbolic-integration-solution is developed in \textcite{Rouder:etal:2012} and implemented in the {\em BayesFactor} package for R \parencite{Morey:Rouder:BayesFactorPackage}. The {\em BayesFactor} package ist most useful for comparison between models without order constraint. 
+
+Figure~\ref{compute} provides an overview of computation.  In the center are three models, serial, general, and a new model, the one-effect model.  In this model all $\gamma_i=\nu_\gamma$, but unlike parallel-1 and coactive-1, there is no order restriction.  The specification of $\nu_\gamma$ is $\nu_\gamma \sim \mbox{Normal}(0,g_\gamma,\sigma^2)$.  The Bayes factors between these three models may be computed in the BayesFactor package.  The remaining models have order constraints.  To compare these to their unconstrained analogs, we use the {\em encompassing approach} from Klugkist, Hoijtink and colleagues to calculate Bayes factors \parencite{Klugkist:Hoijtink:2007,Klugkist:etal:2005}.  \textcite{Haaf:Rouder:2017} provide an overview of how the encompassing approach works in this context. Figure~\ref{compute} shows comparisons made with this encompassing approach.
+
+
+<<compute, cache = T, echo = F, message = F, warning = F>>=
+source('compute.R')
+@
+
+\begin{figure}
+\centering
+\includegraphics[width=4in]{compute.pdf}
+\caption{Bayes factor computation approaches for comparing the six critical models.  The one-effect model serves as a critical bridge.  The label ``BayesFactor" refers to symbolic integration up to $g$ parameters \parencite{Rouder:etal:2012} as performed in the BayesFactor package \parencite{Morey:Rouder:BayesFactorPackage}.  The label ``E" refers to the encompassing approach \parencite{Klugkist:etal:2005}.}
+\label{compute}
+\end{figure}
+
+\nocite{Rouder:etal:2012}

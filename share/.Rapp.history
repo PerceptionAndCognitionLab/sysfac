@@ -1,0 +1,507 @@
+library('BayesFactor')#
+library('MCMCpack')#
+#
+clean.s2=function()#
+{#
+inDat=read.table(url('https://raw.githubusercontent.com/PerceptionCognitionLab/data1/master/sysfactorial/SysFac02/SysFac02.all'))#
+#
+names=c("sub","trial","block","trialBlock","sizeChange","angleChange","changeType","bothDiff",#
+"size1","angle1","size2","angle2","resp","acc","rt","bad","badCount",#
+"tS","tF","tT","tB","tP","tR","percMem","feedback")#
+colnames(inDat)=names#
+#
+bad1 = inDat$sub %in% c(4,21,33)#
+bad2 = inDat$rt<.3 | inDat$rt>5#
+bad3 = inDat$block==0#
+bad4 = inDat$acc==0#
+bad=(bad1 | bad2 | bad3 |bad4)#
+return(inDat[!bad,])	#
+}
+dat=clean.s2()
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)
+a
+2*(a[n]-3/2)
+2*(a-3/2)
+2*(b-3/2)
+2*(a-3/2)*(b-3/2)
+4*(a-3/2)*(b-3/2)
+dat
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	###Unstructured#
+	X=matrix(0,nrow=N,ncol=4*I+3)#
+	for (n in 1:N)#
+	{#
+		X[n,sub[n]]=1   #grand mean#
+		X[n,(I+sub[n])]=2*(a[n]-3/2)  #size deviate#
+		X[n,(2*I+sub[n])]=2*(b[n]-3/2) #angle deviate#
+		X[n,(3*I+sub[n])]=4*(a[n]-3/2)*(b[n]-3/2) #interaction deviate#
+		X[n,(4*I+1)]=2*(a[n]-3/2)  #size mean#
+		X[n,(4*I+2)]=2*(b[n]-3/2)  #angle mean#
+		X[n,(4*I+3)]=4*(a[n]-3/2)*(b[n]-3/2) #interaction mean	#
+	}#
+	g=c(rep(0:3,each=I),4,5,6)#
+	gen=nWayAOV(y,X,g,rscale=c(1,rep(r.indv,3),rep(r.mean,3)))
+r.mean=.16
+r.indv=.1
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	###Unstructured#
+	X=matrix(0,nrow=N,ncol=4*I+3)#
+	for (n in 1:N)#
+	{#
+		X[n,sub[n]]=1   #grand mean#
+		X[n,(I+sub[n])]=2*(a[n]-3/2)  #size deviate#
+		X[n,(2*I+sub[n])]=2*(b[n]-3/2) #angle deviate#
+		X[n,(3*I+sub[n])]=4*(a[n]-3/2)*(b[n]-3/2) #interaction deviate#
+		X[n,(4*I+1)]=2*(a[n]-3/2)  #size mean#
+		X[n,(4*I+2)]=2*(b[n]-3/2)  #angle mean#
+		X[n,(4*I+3)]=4*(a[n]-3/2)*(b[n]-3/2) #interaction mean	#
+	}#
+	g=c(rep(0:3,each=I),4,5,6)#
+	gen=nWayAOV(y,X,g,rscale=c(1,rep(r.indv,3),rep(r.mean,3)))
+source('sysFacLib.R')
+dat=clean.s2()
+out=doBayes(dat)
+source('sysFacLib.R')
+dat=clean.s2()
+out=doBayes(dat)
+out
+out$BF
+put$bf
+out$bf
+out$BF
+names(out)
+print(out)
+out[[1]]
+?list
+source('sysFacLib.R')
+out=doBayes(dat)
+out$BF
+out$mcmc
+dim(out$mcmc)
+I
+source('sysFacLib.R')
+dat=clean.s2()
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)
+mrt
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)#
+	mrts=tapply(y,list(sub,a,b),mean)	#
+	myMIC=function(mat) (mat[1,1]+mat[2,2]-mat[1,2]-mat[2,1])/4#
+	mic=apply(mrt,1,myMIC)
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)#
+	mrts=tapply(y,list(sub,a,b),mean)
+mrts
+mrts=tapply(y,list(sub,a,b),mean)
+myMIC=function(mat) (mat[1,1]+mat[2,2]-mat[1,2]-mat[2,1])/4
+mic=apply(mrt,1,myMIC)
+dim(mrts)
+myMIC=function(mat) {return((mat[1,1]+mat[2,2]-mat[1,2]-mat[2,1])/4)}
+myMIC
+myMIC(mrts[1,,])
+mic=apply(mrts,1,myMIC)
+mic
+doMeanGraph=function(dat,...)#
+{#
+	dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)#
+	matplot(1:2,t(mrt),axes=F,ylab="Response Time",...)#
+}
+doMeanGraph(dat)
+matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)",...)
+matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)")
+axis(2)
+matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)",lty=1:2,lwd=2,col=c('black','darkblue'))
+matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l')
+doMeanGraphA=function(dat,...)#
+{#
+	dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)#
+	matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l',...)#
+    axis(2)#
+	axis(1,at=1:2,labels=c("Low","High"))#
+	box()#
+}
+doMeanGraphA(dat)
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)#
+	matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l',xlim=c(.5,2.5),xlab="Change in Angle")#
+    axis(2)#
+	axis(1,at=1:2,labels=c("Low","High"))#
+	box()
+99
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)#
+	matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l',xlim=c(.9,2.6),xlab="Change in Angle")#
+    axis(2)#
+	axis(1,at=1:2,labels=c("Low","High"))#
+	box()
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)#
+	matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l',xlim=c(.9,2.1),xlab="Change in Angle")#
+    axis(2)#
+	axis(1,at=1:2,labels=c("Low","High"))#
+	box()
+matpoints(1:2,t(mrt),pch=21,bg=c('white','blue'))
+matpoints(1:2,t(mrt),pch=21,bg=c('white','blue'),col=1)
+legend(bottomleft,title="Change in Size",legend=c("Low","High"))
+legend("bottomleft",title="Change in Size",legend=c("Low","High"))
+legend("bottomleft",title="Change in Size",legend=c("Low","High"),lty=1:2,pch=21,pt.bg=c('white','blue'))
+doMeanGraphA=function(dat,...)#
+{#
+	dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)#
+	mrt=tapply(y,list(a,b),mean)#
+	matplot(1:2,t(mrt),axes=F,ylab="Response Time (seconds)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l',xlim=c(.9,2.1),xlab="Change in Angle",...)#
+	matpoints(1:2,t(mrt),pch=21,bg=c('white','blue'),col=1,cex=1.2)#
+    axis(2)#
+	axis(1,at=1:2,labels=c("Low","High"))#
+	legend("bottomleft",title="Change in Size",legend=c("Low","High"),lty=1:2,pch=21,pt.bg=c('white','blue'))#
+	box()#
+}
+doMeanGraphA(dat,ylim=c(1,2))
+doMeanGraphA(dat,ylim=c(1.4,1.9))
+dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)	#
+	mrts=tapply(y,list(sub,a,b),mean)	#
+	myMIC=function(mat) {return((mat[1,1]+mat[2,2]-mat[1,2]-mat[2,1])/4)}#
+	mic=apply(mrts,1,myMIC)#
+	sd=dof=1:I#
+	for (i in 1:I)#
+	{#
+        indvDat=dat[sub==i,]#
+        out=summary(aov(rt~sizeChange*angleChange,data=indvDat))#
+        sd[i]=sqrt(out[[1]][3][4,1])#
+        dof[i]=out[[1]][1][4,1]#
+	}#
+	c80=qt(.9,dof)*(sd/sqrt(dof-1))#
+	o=order(mic)#
+	plot(1:I,mic[o],ylim=c(-.2,.2))#
+	segments(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o])
+arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90)
+?arrows
+arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90,length=1)
+arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90,length=.1)
+plot(1:I,mic[o],ylim=c(-.2,.2),ylab="Observed MIC (sec)")
+arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90,length=.1)
+plot(1:I,mic[o],ylim=c(-.2,.2),ylab="Observed MIC (sec)",typ='n',xlab="Participants")#
+	arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90,length=.1)#
+	hi=mic[o]-c80[o]>0#
+	lo=mic[o]+c80[o]<0#
+	myCol=rep(I,"white")#
+	myCol[lo]="darkred"#
+	myCol[hi]="blue"
+points(1:I,mic[o],bg=myCol,pch=21,cex=1.2)
+plot(1:I,mic[o],ylim=c(-.2,.2),ylab="Observed MIC (sec)",typ='n',xlab="Participants")#
+	arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90,length=.1)#
+	hi=mic[o]-c80[o]>0#
+	lo=mic[o]+c80[o]<0#
+	myCol=rep(I,"white")#
+	myCol[lo]="darkred"#
+	myCol[hi]="blue"	#
+	points(1:I,mic[o],bg=myCol,pch=21,cex=1.2)
+myCol=rep("white",I)
+myCol[lo]="darkred"
+myCol[hi]="blue"
+points(1:I,mic[o],bg=myCol,pch=21,cex=1.2)
+plot(1:I,mic[o],ylim=c(-.2,.2),ylab="Observed MIC (sec)",typ='n',xlab="Participants")
+abline(h=0)
+arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90,length=.1)
+hi=mic[o]-c80[o]>0
+lo=mic[o]+c80[o]<0
+myCol=rep("white",I)
+myCol[lo]="darkred"
+myCol[hi]="blue"
+points(1:I,mic[o],bg=myCol,pch=21,cex=1.2)
+doEmpiricalGraph=function(dat,...)#
+{#
+	dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)	#
+	mrts=tapply(y,list(sub,a,b),mean)	#
+	myMIC=function(mat) {return((mat[1,1]+mat[2,2]-mat[1,2]-mat[2,1])/4)}#
+	mic=apply(mrts,1,myMIC)#
+	sd=dof=1:I#
+	for (i in 1:I)#
+	{#
+        indvDat=dat[sub==i,]#
+        out=summary(aov(rt~sizeChange*angleChange,data=indvDat))#
+        sd[i]=sqrt(out[[1]][3][4,1])#
+        dof[i]=out[[1]][1][4,1]#
+	}#
+	c80=qt(.9,dof)*(sd/sqrt(dof-1))#
+	o=order(mic)#
+	plot(1:I,mic[o],ylim=c(-.2,.2),ylab="Observed MIC (sec)",typ='n',xlab="Participants",...)#
+	abline(h=0)#
+	arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90,length=.1)#
+	hi=mic[o]-c80[o]>0#
+	lo=mic[o]+c80[o]<0#
+	myCol=rep("white",I)#
+	myCol[lo]="darkred"#
+	myCol[hi]="blue"	#
+	points(1:I,mic[o],bg=myCol,pch=21,cex=1.2)#
+	return(mic)#
+}
+doMeanGraphA(dat,ylim=c(1,2))
+doEmpiricalPlot(dat)
+doEmpiricalPlot=function(dat,...)#
+{#
+	dat=dat[dat$bothDiff==1,]#
+	y=dat$rt#
+	sub=as.integer(as.factor(dat$sub))#
+	a=dat$sizeChange-1#
+	b=dat$angleChange-1#
+	N=length(a)#
+	I=max(sub)	#
+	mrts=tapply(y,list(sub,a,b),mean)	#
+	myMIC=function(mat) {return((mat[1,1]+mat[2,2]-mat[1,2]-mat[2,1])/4)}#
+	mic=apply(mrts,1,myMIC)#
+	sd=dof=1:I#
+	for (i in 1:I)#
+	{#
+        indvDat=dat[sub==i,]#
+        out=summary(aov(rt~sizeChange*angleChange,data=indvDat))#
+        sd[i]=sqrt(out[[1]][3][4,1])#
+        dof[i]=out[[1]][1][4,1]#
+	}#
+	c80=qt(.9,dof)*(sd/sqrt(dof-1))#
+	o=order(mic)#
+	plot(1:I,mic[o],ylim=c(-.2,.2),ylab="Observed MIC (sec)",typ='n',xlab="Participants",...)#
+	abline(h=0)#
+	arrows(1:I,mic[o]-c80[o],1:I,mic[o]+c80[o],code=3,angle=90,length=.1)#
+	hi=mic[o]-c80[o]>0#
+	lo=mic[o]+c80[o]<0#
+	myCol=rep("white",I)#
+	myCol[lo]="darkred"#
+	myCol[hi]="blue"	#
+	points(1:I,mic[o],bg=myCol,pch=21,cex=1.2)#
+	return(mic)#
+}
+doEmpiricalPlot(dat)
+doBayes(dat)
+out=doBayes(dat)
+out
+mic=doEmpiricalPlot
+myInt
+myInt=out$myInt
+est=myInt
+pm=apply(est,2,mean)#
+	qL=apply(est,2,quantile,.025)#
+	qU=apply(est,2,quantile,.975)
+est
+out
+names(out)
+est=out$mcmc
+pm=apply(est,2,mean)#
+	qL=apply(est,2,quantile,.025)#
+	qU=apply(est,2,quantile,.975)
+pm
+range=c(min(mic),max(mic))
+mix
+mic
+mic=doEmpiricalPlot(dat)
+mic
+(
+)
+range=c(min(mic),max(mic))
+range
+range=c(min(mic,qL),max(mic,qU))
+range
+?polygon
+polyCI <- function(upper, lower, col){#
+  len <- length(upper)#
+  polygon(x = c(rev(1 : len), 1 : len)#
+          , y = c(rev(lower), upper)#
+          , col = col#
+          , border = NA)
+}
+plot(mic,pm,typ='n',xlab="Observed MIC (est)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma))))
+plot(mic,pm,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), "(sec)")))
+plot(mic,pm,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), " (sec)")))
+plot(mic,pm,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), "  (sec)")))
+polyCI <- function(upper, lower, col){#
+  len <- length(upper)#
+  polygon(x = c(rev(1 : len), 1 : len)#
+          , y = c(rev(lower), upper)#
+          , col = col#
+          , border = NA)}#
+doEstimatePlot=function(mic,est)#
+{#
+	pm=apply(est,2,mean)#
+	qL=apply(est,2,quantile,.025)#
+	qU=apply(est,2,quantile,.975)#
+	range=c(min(mic,qL),max(mic,qU))#
+	plot(mic,pm,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), "  (sec)")))#
+	polyCI(qU,Ql,'lightblue')#
+}
+doEstimatePlot(mic,est)
+pm=apply(est,2,mean)#
+	qL=apply(est,2,quantile,.025)#
+	qU=apply(est,2,quantile,.975)#
+	range=c(min(mic,qL),max(mic,qU))#
+	plot(mic,pm,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), "  (sec)")))#
+	polyCI(qU,qL,'lightblue')
+polyCI <- function(x1,upper, lower, col){#
+  len <- length(upper)#
+  polygon(x = c(rev(x1), x1)#
+          , y = c(rev(lower), upper)#
+          , col = col#
+          , border = NA)}
+doEstimatePlot=function(mic,est)#
+{#
+	pm=apply(est,2,mean)#
+	qL=apply(est,2,quantile,.025)#
+	qU=apply(est,2,quantile,.975)#
+	range=c(min(mic,qL),max(mic,qU))#
+	plot(1:I,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), "  (sec)")))#
+	polyCI(mic,qU,qL,'lightblue')#
+}
+pm=apply(est,2,mean)#
+	qL=apply(est,2,quantile,.025)#
+	qU=apply(est,2,quantile,.975)#
+	range=c(min(mic,qL),max(mic,qU))#
+	plot(1:I,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), "  (sec)")))#
+	polyCI(mic,qU,qL,'lightblue')
+plot(mic,pm,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), "  (sec)")))
+polyCI(mic,qU,qL,'lightblue')
+plot(1:I,pm,typ='n',xlab="Observed MIC (sec)",ylab=expression(paste("Hierarchical Estimate ", hat(gamma), "  (sec)")),ylim=range)
+plot(1:I,pm,typ='n',xlab="Participants",ylab="MIC Estimate (sec)",ylim=range)
+polyCI(qU,qL,'lightblue')
+polyCI <- function(upper, lower, col){#
+  len <- length(upper)#
+  polygon(x = c(rev(1 : len), 1 : len)#
+          , y = c(rev(lower), upper)#
+          , col = col#
+          , border = NA)}
+polyCI(qU,qL,'lightblue')
+plot(1:I,pm,typ='n',xlab="Participants",ylab="MIC Estimate (sec)",ylim=range)#
+	polyCI(qU[o],qL[o],'lightblue')
+abline(h=0)
+lines(1:I,pm)
+lines(1:I,pm[o])
+points(1:I,pm[o])
+lines(1:I,mic[o])
+points(1:I,mic[o])
+plot(1:I,pm,typ='n',xlab="Participants",ylab="MIC Estimate (sec)",ylim=range)
+polyCI(qU[o],qL[o],'lightgrey')
+abline(h=0)
+lines(1:I,mic[o])
+points(1:I,mic[o])
+lines(1:I,pm[o])
+points(1:I,pm[o])
+polyCI(qU[o],qL[o],'grey1')
+polyCI(qU[o],qL[o],'grey255')
+polyCI(qU[o],qL[o],'grey100')
+polyCI(qU[o],qL[o],'grey80')
+polyCI(qU[o],qL[o],'grey90')
+plot(1:I,pm,typ='n',xlab="Participants",ylab="MIC Estimate (sec)",ylim=range)#
+	polyCI(qU[o],qL[o],'grey90')#
+	abline(h=0)#
+	lines(1:I,mic[o])#
+	points(1:I,mic[o])#
+	lines(1:I,pm[o])#
+	points(1:I,pm[o])
+points(1:I,mic[o],pch=21)
+points(1:I,mic[o],pch=21,bg='white')
+lines(1:I,mic[o],lty=2)
+plot(1:I,pm,typ='n',xlab="Participants",ylab="MIC Estimate (sec)",ylim=range)
+polyCI(qU[o],qL[o],'grey90')
+abline(h=0)
+lines(1:I,mic[o],lty=2)
+points(1:I,mic[o],pch=21,bg='white')
+points(1:I,pm[o],pch=21,bg='red')
+lines(1:I,pm[o])
+pm=apply(est,2,mean)#
+	o=order(pm)#
+	qL=apply(est,2,quantile,.025)#
+	qU=apply(est,2,quantile,.975)#
+	range=c(min(mic,qL),max(mic,qU))#
+	plot(1:I,pm,typ='n',xlab="Participants",ylab="MIC Estimate (sec)",ylim=range)#
+	polyCI(qU[o],qL[o],'grey90')#
+	abline(h=0)#
+	lines(1:I,mic[o],lty=2)#
+	points(1:I,mic[o],pch=21,bg='white')#
+	lines(1:I,pm[o])#
+	points(1:I,pm[o],pch=21,bg='red')
+source('../share/sysFacLib.R')
