@@ -1,0 +1,303 @@
+\documentclass[man]{apa6}
+\usepackage{bm}
+\usepackage{url}
+\usepackage{pcl}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage[american]{babel}
+\usepackage{setspace} 
+\usepackage{csquotes}
+\usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber,uniquename=false]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
+
+\addbibresource{lab.bib}
+
+\newcommand{\scN}[1]{$\times 10^{#1}$}
+
+\rightheader{Bayesian Analysis for Systems Factorial Technology}
+\shorttitle{Bayesian Analysis for Systems Factorial Technology}
+
+\leftheader{Thiele et al.}
+
+\author{Jonathan E. Thiele, Julia M. Haaf, and Jeffrey N. Rouder}
+
+\authornote{Jeff Rouder, Department of
+Psychological Sciences, 210 McAlester Hall, University of Missouri,
+Columbia, MO 65211, rouderj@missouri.edu.  This research was
+supported by National Science Foundation grants BCS-1240359 and SES-102408.
+
+The data in this paper was collected under a {\em Born Open Data} protocol \parencite{Rouder:2016} in which they were automatically logged, uploaded, and made freely available as they were created (\url{https://github.com/PerceptionCognitionLab/data1/tree/master/sysfactorial}).  This paper was prepared in LaTeX with R code for data analysis knitted into the document.  The LaTeX and R source are freely available at  \url{https://github.com/PerceptionAndCognitionLab/sysfac}.} 
+
+
+\title{Bayesian Analysis for Systems Factorial Technology}
+
+\affiliation{University of Missouri}
+
+
+\abstract{Systems factorial technology \parencite{Townsend:Nozawa:1995} is a leading methodology for assessing the processing of multiple-feature items.  By using certain experimental designs and analyses, researchers can assess wether features are processed in serial, in parallel, or coactively.  Current practice is to categorize each individual as displaying one of these three architectures.  We argue this approach implicitly assumes heterogeneity of processing strategies across participants.  A more scientifically meaningful approach may be to first ask whether all people are serial or parallel or coactive before assuming heterogeneity.  We develop a series of Bayesian hierarchical models that captures both situations where everyone follows a common architecture and, alternatively, where there is heterogeneity in architecture.  These models use g-prior structures that make computation of Bayes factors convenient.  We report an application to investigate Miller's (1956) notion of chunking.  We asked participants to compare object that are composed of separable features simultaneously, a perception task, and sequentially, a memory task.  We assessed whether processing changed across the perception and memory tasks with the notion that participants might have to chunk features to store them, and that this chunking might make processing more efficient.  The answer is ``no."  We find a serial architecture for processing for highly separable features (size of circle and the orientation of its diameter) in both the perception and memory tasks.  We also find parallel processing for less separable features (first and second digit in a two-digit number) in both perception and memory tasks.  Taken together, while processing may depend on the separability of features, it does not vary across perception and memory.  As importantly, we find that all people had the same processing strategy; that is models that stated no heterogeneity outperformed those with heterogeneity.  This result indicates that architecture may be universal in this setting and not under strategic control.}
+
+\begin{document}
+\maketitle
+\renewenvironment{knitrout}{\begin{singlespace}}{\end{singlespace}}
+
+
+The goal of this paper is to describe a new approach to evaluate evidence for equality and order constraints in psychological data.  We use this new approach for inference in systems factorial technology, a method used to determine the mental architecture underlying processing in experimental tasks.  In turn, we use a variant of systems factorial technology to address the question of whether the architecture of perception is the same as that of working memory.  This paper, therefore, sits at the interface of three stories: a statistical story about how evidence should be evaluated, a methodological story about how architecture is determined, and a substantive story about perception and working memory.  We take each in turn.
+
+We think the most important contribution here is the statistical story.  Here is the background:  Often, researchers are concerned with average effects.  For example, if a researcher thinks an interaction between two variables is theoretically important, they may compute the appropriate $t$-test value, which is a measure of the significance of the average interaction contrast.  An improvement on this approach comes from the psychometrics tradition where individuals provide so much data that they are effectively experiments unto themselves.  For example, if we are interested in the sign of the interaction of two variables, as we will be with systems factorial technology, we may manipulate both variables in a within-subject design where each individual observes many trials in each cell.  We then can compute a $t$-test value for each individual and classify each as significantly negative, nonsignificant, or significantly positive.  Examples of classifying people this way include \textcite{Little:etal:2011}.  The same basic logic has been enhanced by using explicit Bayesian mixture models where individuals are classified into psychologically distinct modes of processing \parencite{Houpt:Fific:2017,Kary:etal:2016,Rouder:etal:2007b}.   This Bayesian approach, though more intellectually defensible, shares the basic property of being an approach for classifying individuals.
+
+We think classifying individuals is not necessarily the best way to proceed.  Let's start with a focus on the sign of an interaction term.  We assume that this sign, whether positive, zero, or negative has theoretical importance.  In this paper, where we use systems factorial technology, the sign of the interaction will be an indicator of the architecture.  The details are provided subsequently, but parallel, serial, and coactive processing implies true interaction contrast terms that are negative, zero, and positive, respectively \parencite{Fific:etal:2008}.  A search for lawfulness here takes the form of asking whether there is a common architecture in a task for all individuals.  If all individuals approach a task with the same architecture, then we might view this architecture as more of a primitive---perhaps that it is biological or automatic, and not under volitional control.  If not, that is if there is true variation in architecture across people, then perhaps the choice of architecture is under strategic control.  Such a result leads to follow-up questions about why certain people with certain characteristics chose certain architectures.
+
+The above emphasis on lawfulness leads to questions like, ``what is the strength of evidence from the data for the proposition that all true values are positive (or zero or negative)?"  These questions cannot be answered by classifying individuals.  Instead, they are questions about global patterns, particularly about the possibility of multiple order and equality constraints holding simultaneously.  They are most deftly answered by comparing models that impose varying constraints.  Traditionally, comparing the fit of models with multiple order-constraints has proven difficult because calculations of the sampling distributions of relevant test statistics is not theoretically or computationally convenient \parencite{Robertson:etal:1988}.   Heuristic approaches such as AIC and BIC are also difficult as the penalty terms depend on the number of parameters but not restrictions of the space \parencite{Klugkist:Hoijtink:2007}.  To address these difficulties, we develop a Bayes factor approach to assess the strength of evidence for models with multiple simultaneous order restrictions.   This development is broadly applicable and provides the answer to the question, "{\em Does everyone?}",  For example, it may be used for questions like, "does everyone identify bright flashes faster than dim ones," or "does everyone show a Simon interference effect?"
+
+The second story, about methodology, goes as follows:  One of the key questions across cognitive psychology is the nature of latent processing that underlies various information-processing tasks.  Consider the perception of objects that can be described by their features.  How these features are combined into coherent wholes remains timely and topical.  This question has generated a long and fruitful mathematical-psychology literature on formal methods for understanding and querying processing architecture.  A selective list includes \textcite{Garner:Felfoldy:1970}, \textcite{Liu:1996}, \textcite{Schweikert:Townsend:1989}, \textcite{Sternberg:1969}, \textcite{Townsend:1990}, and \textcite{Townsend:Ashby:1982}.   
+
+To make the situation concrete, consider the stimuli presented in Figure~\ref{paradigm}.  We call these stimuli {\em screwheads} because they resemble the top view of a flathead screw.  The stimuli are defined by two features: the size of the screwhead and the orientation of the slot.  The question is how these two features are processed. Perhaps the most common approach is to consider three different architectures:   1. {\em Serial processing}, where features are processed one-at-a-time in sequence; 2. {\em  Parallel processing}, where features are processed independently and simultaneously and with unlimited capacity; and 3. {\em Coactive processing}, where the processing of one feature facilitates the processing of the others. 
+
+The approach we take to assess architecture is Townsend and Nozawa's (1995) {\em Systems  Factorial Technology}.   Systems factorial technology refers to a collection of approaches developed by Townsend and his students  \parencite[see][for a review]{Townsend:Wenger:2004}.  The specific one used here is the logical-rules variant \parencite{Fific:etal:2008}.  Using this approach, Fific, Little, and colleagues have found the following two results:  First,  simple objects with separable features, such as the screwheads, are seemingly mediated by serial processing for most people \parencite{Fific:etal:2010,Little:etal:2011}.  Second, objects with integral features such color patches comprised of hue and saturation are seemingly mediated by coactive processing \parencite{Little:etal:2013}.
+
+The third story we consider is the substantive one.  We ask whether the architecture mediating perception is the same as that mediating working memory.  We use simple objects with separable features for both perception and working memory tasks.  Following \textcite{Fific:etal:2010} and \textcite{Little:etal:2011}, we expect serial processing for these types of stimuli.  The main question is about the effect of holding these objects in working memory.   On one hand, one can think that storing, maintaining and recalling stimuli from working memory does not change processing much, and there is a tradition of thinking of memory as reexperiencing the object, albeit as a noisier and perhaps systematically distorted copy \parencite{Estes:1997,Hebb:Foord:1945}.  A modern version of this view is that memory is the reactivation of brain states during the original perception event \parencite{Danker:Anderson:2010}, and it has become popular in fMRI research of memory with pattern-recognition techniques \parencite{Rissman:Wagner:2012}.  Alternatively, working memory is often thought as the process of binding disparate items and features together into one coherent chunk that can be store \parencite{Miller:1956}.  There are several influential accounts of the role of working memory in chunking features together \parencite{Atkinson:Shiffrin:1968,Cowan:1995,Mandler:1980}.  We ask whether this chunking changes the architecture of processing.  It may be that before chunking, items are processed serially, but afterwards, they are processed in parallel or even coactively.  
+
+In the next section we review systems factorial technology. Included in this review is a discussion of the methodological limitations that motivate our Bayesian development.   Thereafter, we develop a set of hierarchical models and derive Bayes factor computations for comparison among these models.  Then, we present two experiments to assess whether recalling information from working memory changes the architecture of processing.  Each experiment consists of a perception condition and a memory condition, and the critical question is whether processing changes across these conditions.  The answer, perhaps surprisingly, is negative.  We observed the same architecture across perception and memory tasks.
+ 
+\section{System Factorial Technology}
+Systems factorial technology refers to a broad collection of paradigms and analyses used to uncover the underlying architecture of processing \parencite{Townsend:Wenger:2004}.  These approaches vary in detail in that some are based on mean responses while others are based on distributional characteristics.  Approaches based on means have the potential of determining whether processing is serial, parallel, or coactive conditional on technical assumptions discussed subsequently.  Distributional approaches provide for greater diagnosticity---they have the potential to assess the role of channel capacity and interdependence in processing multiple features and whether serial processes are self-terminating or exhaustive. 
+
+We use one specific variant of systems factorial technology, the  logical rules approach based on mean response times in a conjunction task \parencite{Fific:etal:2010}.  This approach allows for the assessment of whether features are processed in  serial, parallel, or coactively.  In what follows we describe the approach in detail, first starting with the stimuli, task, and finishing with the statistical analysis.  This statistical analysis is based on classification, and we expand upon the critique of classification we presented earlier.  
+
+{\bf Stimuli}.  The first step in applying systems factorial technology is operationalizing the features of a stimulus.  Consider the screwheads in Figure~\ref{paradigm}.  These stimuli have been used in several studies
+in categorization \parencite[e.g.,][]{Maddox:Ashby:1993,McKinley:Nosofsky:1995}
+because the features, the size of the screw and the orientation of the slot, may be manipulated factorially.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=6in]{experimentFrames.pdf}
+\caption{Paradigm for Experiment~1.  {\bf A.} Schematic of trials in the perception task.  The participant decides if the screwheads differ in both size and slot orientation.  {\bf B.}  Schematic of trials in the memory task.}
+\label{paradigm}
+\end{figure}
+
+
+{\bf Task}.  We asked participants to compare two screwheads (Figure~\ref{paradigm}A) and respond positive if the stimuli were different on both dimensions and negative otherwise.  There are three levels of difference for each feature.  Consider orientation:  The two stimuli could have the same orientation, a small orientation difference, or a large orientation difference, and we denote these three levels as $0$, $1$, and $2$, respectively.  The same holds for size: The two stimuli could have the same size, a small size difference, or a large size difference, again denoted by $0$, $1$, and $2$, respectively.  Crossing these levels yield nine possibilities, and each possibility may be denoted by an ordered pair.   For example, the ordered pair $(0,2)$ denotes no change in orientation and a large change in size across the pair of screwheads.  The task maps $(1,1)$, $(1,2)$, $(2,1)$, and $(2,2)$ into the positive response and the remaining 5 combinations into the negative response.  This mapping is shown in Table~\ref{task}.
+
+\begin{table}
+\caption{The Systems Factorial Task and Contrast}
+\begin{tabular}{lccc}
+& \multicolumn{3}{c}{Size}\\
+Orientation &no change (0) & small change (1) & large change (2) \\ \hline
+\multicolumn{4}{c}{Response Mapping}\\
+no change (0) & - & - & - \\
+small change (1) & - & + & + \\
+large change (2) & - & + & + \\ \hline
+\multicolumn{4}{c}{Cell Mean Notation}\\
+no change (0) & $\bar{Y}_{00}$ & $\bar{Y}_{01}$ & $\bar{Y}_{02}$ \\
+small change (1) & $\bar{Y}_{10}$ & $\bar{Y}_{11}$ & $\bar{Y}_{12}$ \\
+large change (2) & $\bar{Y}_{20}$ & $\bar{Y}_{21}$ & $\bar{Y}_{22}$ \\ \hline
+\multicolumn{4}{c}{Interaction Contrast}\\
+no change (0) & 0 & 0 &0 \\
+small change (1) & 0 & + & - \\
+large change (2) & 0 & - & + \\ \hline
+\end{tabular}
+\label{task}
+\end{table}
+
+
+{\bf Analysis}.  The relevant data in the systems factorial method are the affirmative responses.  Let $Y_{11}$, $Y_{12}$, $Y_{21}$, $Y_{22}$ be the response-time distributions for the conditions $(1,1)$, $(1,2)$, $(2,1)$, and $(2,2)$, respectively, and let $\E(Y_{11})$, $\E(Y_{12})$, $\E(Y_{21})$, $\E(Y_{22})$ be the respective expectation value of these distributions.  Then the true mean interaction contrast (MIC), denoted $M$, is\footnote{Usually, the true interaction contrast is defined as $M=\E(Y_{11})+\E(Y_{22})]-[\E(Y_{12})+E(Y_{21})]$.  We prefer the scaled version, $M=([\E(Y_{11})+\E(Y_{22})]-[\E(Y_{12})+E(Y_{21})])/4$ because then $M$ is the interaction parameter in the usual linear model (see Eq.~\ref{linmod}).}
+\[
+M = \frac{[\E(Y_{11})+\E(Y_{22})]-[\E(Y_{12})+E(Y_{21})]}{4}.
+\]
+The observed MIC is 
+\[
+\hat{M} = \frac{(\bar{Y}_{11}+\bar{Y}_{22})-(\bar{Y}_{12}+\bar{Y}_{21})}{4},
+\]
+where $\bar{Y}_{11}$, $\bar{Y}_{12}$ , $\bar{Y}_{21}$ , and $\bar{Y}_{22}$  denote the observed cell means for conditions $(1,1)$, $(1,2)$, $(2,1)$, and $(2,2)$, respectively.  The structure of these observed cell means and of the contrast is also shown in Table~\ref{task}.    The observed MIC is the best, unbiased estimator of the true MIC when the numbers of observations per cell are equal.
+ 
+Perhaps \textcite{Sternberg:1969} first popularized this interaction as a means of assessing architecture. \textcite{Schweikert:1978} and \textcite{Schweikert:Townsend:1989} provide more formal developments.  Townsend and Nozawa (1995) showed that the sign of $M$ is diagnostic of the nature of processing under certain technical conditions.  The key results we leverage here are: {\bf 1.} If processing is parallel, the $M$ is negative.  {\bf 2.} If processing is coactive, then $M$ is positive.  {\bf 3.}  If processing is serial, then $M=0$.  The technical conditions are that RT distribution order with strength: $Y_{22} \leq Y_{21}$, $Y_{22} \leq Y_{12}$, $Y_{21} \leq Y_{11}$, and $Y_{12} \leq Y_{11}$.\footnote{The inequality of random variables refers to a stochastic ordering.  The statement $Y_{22} \leq Y_{21}$ is equivalent to the statement that $Pr(Y_{22}<t) \geq Pr(Y_{21}<t)$ for all $t$.}  In our experience RT distribution order with strength variables over ecologically valid ranges \parencite[see also][]{Luce:1986,Rouder:etal:2010d,Wagenmakers:Brown:2007}.  We know of no instances where this ordering has been violated with strength variables such as those used here, and we accept these technical conditions as assumptions without further confirmation.  
+
+
+\subsection{The Methodological Critique}
+Perhaps the least sophisticated approach is to assess the global interaction across all people.  Figure~\ref{surf1}A provides the overall cell means from our first experiment, to be presented subsequently.  As can be seen, there is not even a whiff of an interaction.  Yet, global contrasts tell us little about individuals and might be misleading.  Practitioners of system factorial technology have instead estimated the MIC separately for  each individual.  Figure~\ref{surf1}B provides an example from our to-be-presented experiment.  Here we have plotted the contrast with 80\% confidence intervals for each individual's MIC.  As can be seen, 22 of the 32 of the confidence intervals
+contain 0, 5 of the 32 are localized above zero, and 5 of the 32 are localized below
+zero.  One interpretation is that 22, 5, and 5 of the participants provide
+support for serial, parallel, and coactive architectures,
+respectively. 
+
+
+<<e1emp,cache=T,echo=F,message=F,warning=F>>=
+source('figE1emp.R')
+@
+
+\begin{figure}
+\centering
+\includegraphics[width=7in]{figE1emp.pdf}
+\caption{Results from Experiment 1:  {\bf A.,C.} Observed mean response times for Experiments 1A (perception) and 1B (memory), respectively.  {\bf B., D.} Observed mean interaction contrasts (MICs) with 80\% confidence intervals for each individual.  The CIs with open circles contain zero (serial processing); those with colored circles are either entirely above zero (coactive processing) or entirely below zero (parallel processing).}
+\label{surf1}
+\end{figure}
+
+One of the weaknesses in the confidence interval approach is a difficult asymmetry where the serial signature is a point hypothesis while the parallel and coactive signatures are hypotheses across respective halves of the real line.  The usual significance test approach allows rejection of the point but not acceptance of it.   The usual approach of holding the nominal Type I error rate here is not appropriate here because it privileges serial processing.  Even more problematic, this privilege varies with sample size, and it is almost complete with small sample sizes where Type II errors are common.  To address this issue, we chose 80\% threshold on the confidence interval.  Yet, such a choice plays an outsized role in classifying individuals' architectures.  
+
+There are recent approaches using Bayesian mixture models to classify people.  \textcite{Houpt:Fific:2017} approaches systems factorial assessment this way.   Each individual's MIC is treated as a parameter, and the prior has some mass below zero, some point mass at zero, and some mass above zero.  By placing prior point mass at zero, and using a rational approach to updating the probability that the MIC is below, at, and above zero, these methods obviate the above concern.  In this regard, they are needed advances.
+
+But there is a deeper problem with confidence interval approach and Houpt and Fific's improvement.  They are based on making categorizations of individuals, and, as we argued earlier, such an approach is ill-suited for assessing lawful regularities.   In particular, they are poorly calibrated for assessing whether all people use a common processing architecture.  We think these ``does everybody" statements are foundational, theoretically important, and worthy of consideration.  Our claim here is not so much that individual-categorization approaches preclude these types of lawful regularities, but that they do not provide a principled, calibrated approach to measuring the strength of evidence for them.  One issue is prior probability of lawfulness.  In the individual-categorization approach it may be quite low.  For example, the prior probability of all individuals exhibiting serial architecture might be $(1/3)^I$, where 1/3 is the prior probability that a given individual exhibits serial processing and $I$ is the number of individuals.  Having such small prior probabilities for lawfulness is an undesirable bias against simplicity.  Prior probabilities of finding at least some variation in processing across people may be quite high.  Hence, the act of categorizing individuals seems biased toward finding variation of processing architectures across individuals at the expense of highlighting lawful regularity.  
+
+The solution to the problem is conceptually straightforward.  To assess whether these lawful regularities hold, that is, whether all individuals exhibit  serial processing, or all people exhibit parallel processing, or all people exhibit coactive processing, we compare models with and without these regularity constraints.  In the simplest incarnation, we may propose four models: the `everyone-is-serial model where each individual's true MIC is constrained to be zero; the everyone-is-parallel model where each individual's true MIC is constrained to be negative; the everyone-is-coactive model where each individual's true MIC is constrained to be positive; and the unconstrained model where no such restrictions are placed on true MIC.  Then, we can explicitly assess the strength of evidence for universal serial, parallel, or coactive processing or for variability in processing by assessing the relative fit of all four models.
+
+As discussed above, stating strength of evidence for models with multiple simultaneous order and inequality constraints is relatively novel.  The frequentist literature on the problem is large because the problem is considered very hard \parencite{Robertson:etal:1988}.  The Bayesian solution is far more elegant, and Klugkist, Hoijtink and colleagues have shown how an encompassing approach leads to conceptually straightforward and computationally convenient solutions \parencite{Klugkist:etal:2005,Klugkist:Hoijtink:2007,Mulder:etal:2009}.  In \textcite{Haaf:Rouder:2017}, we  show that the encompassing approach is feasible in mixed linear models, and in the course of doing so, we assess whether everyone has true Stroop and Simon effects in the usual direction where congruent stimuli are identified more quickly than incongruent ones.  Here, we extend the Haaf and Rouder development for systems factorial technology. 
+
+<<child='models.Rnw'>>=
+@
+
+
+\section{Experiment~1}
+
+In Experiment~1 we assess whether chunking affects processing by comparing the aforementioned models in a perception condition and in a working-memory condition.  In the perception condition, participants
+were presented two screwhead stimuli that may vary in the size of the screw and the orientation of the slot (see Figure~\ref{paradigm}).  They had to decide if both features differed or if at least one feature was the same.  The working-memory task consisted of the same stimuli, but instead of comparing two simultaneously presented screwheads, participants compared a presented screwhead to one presented one second previously and available only from memory.
+
+\subsection{Method}
+
+\subsubsection{Participants} A total of 64 University of Missouri students participated in exchange for course credit.  Two were discarded for below-chance performance and another for excessively long response times that averaged over 5 seconds.  
+
+\subsubsection{Stimuli \& Design} Stimuli were pairs of screwheads that varied in two features: size and orientation.   Each feature could either be the same, differ by a small amount, or differ by a large amount.  Crossing these three levels yields nine possible combinations as shown in Table~\ref{task}.   
+
+In the perception condition, screwheads were presented in white on a black background.  The screwhead on the left served as the standard.  It had  a radius that varied between 54 and 180 pixels (chosen randomly from a uniform distribution) and had an orientation that varied across all possible angles (again, chosen randomly from a uniform distribution).  The screwhead on the right had either the same size radius (no change), a radius that was 15\% larger or smaller (small change) or a radius that was 30\% larger or smaller (large change).  Likewise the screwhead on the right had either the same orientation, a  $\pm20^\circ$ orientation difference (small change) or a $\pm60^\circ$ orientation difference (large change).  Changes in size were equally likely to be an enlargement or a reduction in radius; changes in orientation were equally likely to be clockwise or counterclockwise in direction.  
+
+In the memory condition, screwheads were white presented on a grey background, and this change of background was needed to reduce the formation of after images of the first stimulus.  Unfortunately, participants in a pilot study were unable to perform the memory task at sufficiently high performance with these parameters.  To provide for high accuracy,  we increased the differences in features across the screwheads for this condition.  The radius changes were 30\% and 50\% and the orientation changes were $\pm35^\circ$ and $\pm75^\circ$ of difference.  
+
+Task condition, whether memory or perception, was manipulated in a between-subject manner with thirty and thirty-two participants performing in the memory and perception conditions, respectively.  
+
+\subsubsection{Procedure}  A trial consisted of the events shown in Figure~\ref{paradigm}A and \ref{paradigm}B for the perception and working memory conditions, respectively.  There were 9 types of trials comprised of the crossing of feature levels as shown in Table~\ref{task}.   The five negative trial types, $(0,0)$, $(0,1)$, $(0,2)$, $(1,0)$, and $(2,0)$, each occurred with probability .1.  The four positive types, $(1,1)$, $(1,2)$, $(2,1)$, and $(2,2)$ each occurred with probability .125.  There were 360 experimental trials in a session, and these were preceded by 18 practice trials.  Participants were given a pleasant doubled beep for correct responses and a less pleasant buzz for wrong ones.  Trials were blocked in groups of 60, and participants were given a self-paced break between blocks.  Trials were self paced, and participants started each by pressing a space bar.  Positive and negative responses were made by pressing the '/' and 'z' key, respectively.
+
+\subsection{Results \& Discussion}
+The key target for analysis is the interaction between the factors.  One worry in systems factorial research is that the manipulations are ineffective, and if so, then a null interaction might be expected.  With ineffective manipulations a null interaction could be misdiagnosed as serial processing.  Hence, we first check the overall effectiveness of the manipulations.
+
+Figure~\ref{surf1}A-B show the empirical results for Experiment 1A, the perception condition.  At the aggregate level, there are reasonably large main effects of angle difference (\Sexpr{me.1a[1]} s) and radial size difference (\Sexpr{me.1a[2]} s).  Error bars denote within-subject pooled-variance 95\% CIs \parencite{Masson:Loftus:2003,Rouder:Morey:2005}.  From the graph it is clear that both manipulations were effective.  This fact licenses the ensuing analyses of the interactions.
+
+Inspection of individual observed MICs seemingly provides support for a serial architecture for most participants.  Figure~\ref{surf1}C-D show the same for Experiment 1B, the memory condition.  The main effects of size and angle differences are a bit smaller (\Sexpr{me.1b[1]} s and \Sexpr{me.1b[2]} s for angle and size, respectively), and inspection of individual MICs in Figure~\ref{surf1}D seemingly provides similar support for the serial conclusion.
+
+We fit the general model to Experiments 1A and 1B using the BayesFactor package.  Whereas the model is linear and well identified, it is not surprising that mixing was excellent as confirmed by parameter trace plots and autocorrelation functions. Figure~\ref{est}A-B show the resulting parameter estimates.  The open points are the observed MICs; the colored points are posterior means of $\gamma_i$, the interaction parameters.   The shaded area is the 95\% credible intervals for the model estimates.  The estimates of $\gamma_i$ order as the observed MICs, and in particular seemingly provide support for the serial conclusion.  Notably, there is much shrinkage, which is an indication that the variation in observed MICs reflects sample noise to a large extent rather than true differences in individuals.  
+
+
+<<figMod,cache=T,echo=F,message=F,warning=F>>=
+source('figMod.R')
+@
+
+
+\begin{figure}
+\centering
+\includegraphics[width=6in]{figMod}
+\caption{Estimates of the interaction parameters $\bfgamma$ from the general model for all experiments.  The filled points and the shaded area are the posterior means and 95\% credible regions, respectively.  The open points are the observed MIC values and are included to show the amount of shrinkage obtained by modeling trial and individual variability jointly.}
+\label{est}
+\end{figure}
+
+<<bf,cache=T,eval=T,echo=F,message=F,results="asis">>=
+source('table.R')
+@
+
+
+
+The definitive answers to the critical questions about processing architecture come from comparing the six aforementioned models.  Table~\ref{bf} provides the Bayes factors for both perception and memory conditions.   The ``*'' indicates the most preferred model, and the serial model is most preferred for both the perception and memory conditions.  The remaining values indicate the BF between the most preferred model and the remaining models.   For example, for Experiment 1A, the listed value under the general model is \Sexpr{output[1,6]}.  This value indicates that the serial model has \Sexpr{round(vals[1,6]/rowMin[1],1)} times the probability density at the observed data than does the general model.  Values of $\approx 0$ indicate that the winning model has Bayes factors several orders of magnitude greater than the indicated model.  From the table, the following results are clear:  1. the serial model performs notably well for both conditions.   2. The three models that specify individual differences---parallel-2, coactive-2, and the general model---fared poorly.  Everyone seemingly processed these screwheads in serial in both the perception and working-memory tasks. 
+
+
+These results are somewhat surprising to us.  We expected that recall from working memory would rely on a different architecture than perception, perhaps through consolidation, grouping, or chunking.  Yet, we found both tasks were mediated by serial processing of features.  We also expected that there might be noticeable individual differences.  These expectation were guided by previous results in systems factorial technology where analysis of individuals reveals variability in processing \parencite[e.g.,][]{Little:etal:2011}.  Yet, we found evidence against individual variation in true interactions.  Models with individual variation were heavily penalized for this flexibility, and models with a single true value fared much better.  We discuss qualifications of these findings subsequently.
+
+\section{Experiment~2}
+Experiment~1 revealed serial processing in both the perception and working-memory tasks.  In Experiment 2 we attempt to encourage chunking by using two-digit number stimuli instead of screwheads.  An example stimulus was the number  ``46."   We treat each digit as a feature, and refer to the 10s feature and the 1s feature.  A  difference in the 10s feature is seen in the difference between the numbers ``46" and ``56"; a difference in the 1s feature is seen in the difference between the numbers ``46" and ``47"; and a difference in both features is seen in the difference between the numbers ``46" and ``57."  These differences in digits could be small, $\pm1$, as in the previous examples, or large, $\pm3$.  For example "46" and "19" differ by a large amount in both features.  Experiment 2 followed the same structure of Example 1; the main difference was the type of stimuli.
+
+Whether the size of changes, from $\pm1$ to $\pm3$, affects responses deserves further scrutiny.   Digit change size matters if digits are processed as magnitudes rather than as abstract symbols.  Evidence for magnitude processing comes from the well-known distance-from-five effect \parencite{Moyer:Landauer:1967}.   Participants in distance-from-five tasks must identify whether a single-digit number is less-than or greater-than five.  \textcite{Rouder:etal:2005a} found that responses to digits far from five, e.g. 2 and 8, are responded to 50 ms faster than digits close to five, e.g. 4 and 6.  In Experiment 2, we find similar effects across the change-size manipulation as is discussed subsequently.
+
+\subsection{Method}
+\subsubsection{Participants}  A total of 56 University of Missouri students participated in exchange for course credit.  One was discarded for excessive errors.
+
+\subsubsection{Stimuli}  The left-hand number served as the standard, and the digits that comprised it varied between 4 and 6, inclusively.  In the small change condition, the digits of a common feature varied by $\pm1$; in the large change condition digits in the common feature varied by $\pm3$.  Changes were equally likely to be positive or negative.  The same nine combinations as Experiment~1 were used in the same frequencies.
+
+\subsubsection{Procedure}
+The procedure for Experiment 2 was identical to Experiment 1.
+
+
+<<e2emp,cache=T,echo=F,message=F,warning=F>>=
+source('figE2emp.R')
+@
+
+<<aveEffect,echo=F>>=
+ave2=mean(c(me.2a,me.2b))
+@
+
+\subsection{Results}
+We first check to make sure the manipulations were effective, especially since the digit changes, from $\pm1$ to $\pm3$, is not so large.
+Figure~\ref{surf2}A and \ref{surf2}B show the empirical results for Experiment 2A, the perception condition.  Figure~\ref{surf2}C and \ref{surf2}D show the same for Experiment 2B, the memory condition.   The effect across all conditions is about \Sexpr{ave2*1000} ms, 
+which is large for these type of digit effects \parencite{Moyer:Landauer:1967,Rouder:etal:2005a}.   Inspection also indicates the possibility of an interaction where the decrease in RT is disproportionately  bigger  when there is a large change in both digits.  This type of interaction corresponds to a negative MIC.  In contrast, inspection of individual MICs seemingly provides support for a serial architecture for many participants.  A minority of participants in the memory condition have a negative MIC, which is consistent with parallel processing for these participants.
+
+\begin{figure}
+\centering
+\includegraphics[width=7in]{figE2emp.pdf}
+\caption{Results from Experiment 2:  {\bf A.,C.} Observed mean response times for Experiments 2A (perception) and 2B (memory), respectively.  {\bf B., D.} Observed mean interaction contrasts (MICs) with 80\% confidence intervals each individual.  The CIs with open circles contain zero (serial processing); those with colored circles are either entirely above zero (coactive processing) or entirely below zero (parallel processing).}
+\label{surf2}
+\end{figure}
+
+Parameter estimates for each $\gamma_i$ are shown in Figure~\ref{est}.  There is the familiar degree of shrinkage, but, importantly, there is also some evidence that several people exhibit parallel processing.  The estimates for Experiment 2A, however, are ambiguous.  It is difficult to tell if processing is parallel or serial, or if the outlying estimate is enough to favor the general model, which is the only model that is flexible enough to account for true dispersion across zero.  Similar ambiguities are present for Experiment 2B; it is unclear if the trend toward parallel is influential or if the presence of several near-zero estimates are more compatible with serial processing.
+
+These ambiguities are resolved with model comparison, and the Bayes factors are shown in Table~\ref{bf}.  For Experiment 2A, the one with the sole outlier, the data are fairly equivocal between parallel processing and the general model.  The slight preference for the general model reflects the leverage of a single participant with a large positive interaction that is too large to be due to sample noise.  The Bayes factor for Experiment 2B reveals that the data are most compatible with the parallel-1 model, the parallel processing model without individual differences.  
+
+\section{Effects of Prior Specifications}
+Bayesian analysis is predicated on specifying prior distributions on parameters.  Analysts should be familiar with how these specifications affect model comparison.   A few points of context are helpful.  It seems reasonable as a starting point to require that if two researchers run the same experiment and obtain the same data, they should reach the same if not similar conclusions.  Yet, almost all Bayesians note that priors have effects on inference.  To harmonize Bayesian inference with the above starting point, many Bayesian analysts actively seek to minimize these effects by picking likelihoods, prior parametric forms, and heuristic methods of inference so that variation in prior settings have marginal effects \parencite{Aitkin:1991,Gelman:etal:2004,Kruschke:2012,Spiegelhalter:etal:2002}.  In the context of these views, the effect of prior settings on inference is viewed negatively; not only is it something to be avoided, it is a threat to the validity of Bayesian analysis.
+
+We reject the starting point above including the view that minimization of prior effects is necessary or even laudable.   \textcite{Rouder:etal:2016b} argue that the goal of analysis is to add value by searching for theoretically-meaningful structure in data.  \textcite{Vanpaemel:2010} and \textcite{Vanpaemel:Lee:2012} provide a particularly appealing view of the prior in this light.  Accordingly, the prior is where theoretically important constraint  is encoded in the model.  In our case, the prior provides the critical constraint on the sign of the interaction term.  The choice of prior settings are important because they unavoidably affect the predictions about data for the models (Figure~\ref{spec}).  Therefore, these settings necessarily affect model comparison.  We think it is best to avoid judgments that Bayes factor model comparisons depend too little or too much on priors.  They depend on it to the degree they do.  Whatever this degree, it is the degree resulting from the usage of Bayes rule, which in turn mandates that evidence for competing positions are the degree to which they improve predictive accuracy.
+
+This call to embrace the prior as part of the model leads immediately to the realization that different researchers may reach different conclusions from the same data.  \textcite{Rouder:etal:2016b} argue that this variation is not problematic.  They recommend that so long as various prior settings are justifiable, the variation in results should be embraced as the legitimate diversity of opinion.  We take this view.  Our goal in understanding the dependence of Bayes factors on prior settings is to understand the diversity of opinions that may be drawn.
+
+The critical prior settings are the scales on variability that determine the differences in the competing models, $r_\gamma$ and $r_{\nu_\gamma}$.  We set these to 10\% and 15\%, respectively.  The interpretation is that in the general model, average interaction effects have a scale in variability that is 15\% of the standard deviation $\sigma$, and the scale of individual variation around this average is 2/3rds of this value.  These values reflect our past experiences with unidimensional strength variables.  To explore the diversity of opinion, we took the limit of what we would consider reasonable values for these settings.  We used four conditions.  In one we doubled the scales $(r_\gamma=.2,r_{\nu_\gamma}=.3)$, and these values represent an upper limit on effects  in most psychological experiments.  We also halved the scales  $(r_\gamma=.05, r_{\nu_\gamma}=.075)$, and these values are a lower limit on such effects.  We also explored the ratio $r_{\nu_\gamma}/r_{\nu_\gamma}$, with upper and lower limits of 1 and .5, respectively. 
+
+We chose to explore the effect of prior settings in Experiment~1b and Experiment~2b because the observed MICs follow a difficult-to-interpret pattern.   In Experiment~1b, it is not clear from inspection whether the slight negative effect is enough to support a parallel or serial model.  In Experiment 2B, it is not clear if there is enough support for parallel or serial model, or if there is so much dispersion to support the general model.  Because the data are middling between these positions, the possible effects of prior settings are enhanced.  Table~\ref{robust} shows the results of  changing prior settings.  This table follows the same format as Table~2---the most preferred model is indicated with a ``*'' and the remaining values in a row are relative to it.  In our main analysis with $r_\gamma=.10$ and  $r_{\nu_\gamma}=.15$, the best model was serial and parallel-1 for Experiments 1b and 2b, respectively.  These conclusions remain unchanged across the different prior settings.  That said, the Bayes factor values do vary appreciably and readers may use the range of these values as context in assessing the processing question.
+
+<<robust,cache=T,eval=T,echo=F,message=F,results="asis">>=
+source('robust.R')
+@
+
+
+The results in Table~\ref{robust} may be understood in the context of the different constraints.  One of the defining features of parallel-2, coactive-2, and the general model is that they allow for individual differences in true MIC.  Hence, these models have much higher dimensionality than parallel-1, coactive-1, and the serial model as these have no individual differences in true MIC.  One of our approaches to cope with this difference is to use hierarchical specifications for parallel-2, coactive, and the general model (see Figure~\ref{spec}).  Hierarchical models are becoming increasingly popular in psychology because they allow for both more accurate estimation of parameters and better generalization outside the sample to the population.  In our case, the hierarchical specification reduces the dimensionality of individual differences by incurring correlation among individuals.  The parameter that controls this model dimensionality is $r_\gamma$.  Large settings imply much individual variation and a higher dimensional model.  Small settings imply small degree of individual variation and a lower dimensional model.  The degree of dimensional difference is a function of the number of participants, and the effect of $r_\gamma$ becomes quite extreme with large numbers of people.  Researchers using this approach to understand the nature of individual differences must be mindful of these dynamics \parencite{Haaf:Rouder:2017}.  
+
+\section{Misspecification Revisited: A Simulation Study}
+
+
+<<sim,cache=T,eval=T,echo=F,message=F,results='hide',warning=F>>=
+source('sim.R')
+print(p)
+@
+
+\begin{figure}
+\centering
+\includegraphics[width=4.5in]{simFig.pdf}
+\caption{Simulation with misspecifications.  {\bf A.} Simulated data were drawn from an ex-Gaussian; the scale of the exponential component varied with condition.  {\bf B.} Ground truth interaction distributions across hypothetical participants.  The serial truth is the spike at zero, the coactive truth is the positive distribution, the unconstrained truth follows the broad normal.  {\bf Middle and Bottom Row}.  Bayes factor results for various ground truths.  The true model was set to 1.0 on each run, and for the vast majority of runs, the true model was most preferred. }   
+\label{sim}
+\end{figure}
+
+The RT data in this report are skewed with a small degree of heterogeneity across conditions.  The models, however, assume a normal, homogenous form across replicates.  We argued previously that this misspecification is of limited concern because the main targets of inference are the expected values of cell means rather than the distribution of the replicates.  Yet, some readers may worry about the usefulness of our normal homogeneous models with skewed heterogeneous RT data. 
+
+To understand what constitutes the usefulness of a model, it is helpful to have a sense of what models are and what they do.  Models at their core are abstractions that exist in the platonic rather than real world \parencite{deFinetti:1974}.  In this view they are neither true nor false---they are just models \parencite{Morey:etal:2016,Rouder:etal:2016b}.  Perhaps a good metaphor is a subway map.  Subway maps capture important constraints, say the order of stops on a line and the intersection of the lines.  They do not capture all aspects of the subway, for example they distort the distances between stops and the color of the tracks.  This combination of capturing important constraints while distorting other elements for convenience and tractability is what we strive for as well.  Our models capture theoretically important constraints among the individuals, say that all use one processing mode or another, while distorting for convenience and tractability nuisance elements.  This approach can be compared to that in \textcite{Houpt:Fific:2017} who take care to model the skew of response times---a nuisance element---while missing the constraints that all individuals may use the same processing.  
+
+The usefulness of the model, in our view, is its ability to capture the theoretically important constraints.  To show that the treatment of the nuisance elements is inconsequential, we ran a small simulation study. In it, we generate simulated data from various known ground truths and see how the Bayes factors perform even when the models are misspecified.  It is important, however, to recognize that these simulations assess the {\em frequentist properties} of model comparison.  Once we condition on known truths, we have moved outside the Bayesian paradigm and entered the frequentist one where long-run error rates are central.  We use the following simulations to show that the models have reasonable frequentist properties even when the ground truths do not match the nuisance assumptions.
+
+To make the simulated data skewed and hetergeneous, we sampled RTs from an ex-Gaussian distribution \parencite{Heathcote:etal:1991}.  The effect of the manipulations was in the scale of the exponential component.  Figure~\ref{sim}A shows three distributions: the quickest and most symmetric distribution (dotted lines) is for when both factors have large changes; the intermediate one (dashed lines) is for when one factor has a large change and the other has a small change; the slowest and most skewed one (solid lines) is for when both factors have small changes.  Figure~\ref{sim}A shows a case with no interaction.  To generate interactions, we added or subtracted an additional amount to the scale of the exponential for the (2,2) cell, the one where both factors have a small change.
+
+To generate different interaction ground truths, we varied the distribution on this additional amount.  For the serial ground truth, where each individual has no interaction, nothing is added.  This setup is shown in Figure~\ref{sim}B by the arrow at zero.  For the coactive ground truth, the additional amount is distributed as a lognormal that is localized around 80 ms, a value chosen after observing the experimental data.  Each individual's interaction parameter is sampled from this distribution on each run of the simulation.  The distribution for the parallel ground truth is the negative of the coactive ground truth, and it is omitted to keep the figure less cluttered.  Finally, for the unconstrained ground truth, the interaction distribution across individuals was widely spread.   Simulation runs were modeled on Experiment 2B where there are 4697 observations distributed across 27 participants.  For each run, all six Bayesian models were analyzed.   Overall, there were 50 runs for each of the four different ground truth scenarios.
+
+Figure~\ref{sim} shows the Bayes factors for all truths, models, and runs.  The center-left panel, labeled ``Serial'' shows the case where the serial case served as ground truth.  The Bayes factors are normalized on each run so that all comparisons are made to the serial Bayesian model.  Values below 1.0 mean that the serial model is preferred, and, indeed, the serial model won for \Sexpr{round(p[1]*100,0)}\% of the runs.  One facet of the graph is that many values cluster at .0001.  We rounded up all Bayes factors below this value for convenience in visualizing the simulation results.  The observed values were often much smaller than this lower limit.  The remaining plots show the same analysis for the other ground truths.  Again, we used the same normalization where comparisons are relative to the model that best corresponded to the ground truth.  The Bayes factor recovered the correct model with rates of \Sexpr{round(p[2]*100,0)}\%, \Sexpr{round(p[3]*100,0)}\%, and \Sexpr{round(p[4]*100,0)}\%, for the parallel, coactive, and unconstrained truths.  These values indicate that the Bayes factor model-comparison has good frequentist properties even when misspecified.  
+
+There is no magic here.  We designed the models to capture theoretically important truths on cell means.  And that is why they are useful.
+
+
+\section{General Discussion}
+
+Systems factorial technology is an exciting methodology for addressing fundamental questions about processing architecture.  We address some of the real-world statistical difficulties in analysis.  Our contribution here is the proposal and evaluation of models where all individuals have the same architecture.   This type of "everyone does" formulation is the direct way to assess lawful regularity that undergirds theoretical propositions about the automaticity and universality of certain information-processing structures.  In our case, we ask whether everyone uses serial, parallel, or coactive processing for simple perception and memory tasks.  The alternative proposition is that the type of architecture varies across people.  If so, then the architecture is not universal, and, perhaps, may even be under strategic control.  To date, we know of no other attempt to conceptualize system factorial technology as universal or variational.
+
+We compared models with Bayes factors to understand whether chunking in working memory changes the architecture of processing.  Our experiments consisted of matched perception and memory tasks, and it was expected that this change in task would perhaps be associated with a change in processing.  Plausibly, the chunking in working memory could have consolidated the features into a single whole that could be processed more efficiently than in serial.  Such results, however, were not observed.  For the screwhead task, where the features are highly separable, the usual serial result held not only for the perception version \parencite{Little:etal:2011}, but for the memory version as well.  For the digits task, where the stimuli are separable, but have common holistic interpretations, we observed that processing was parallel in both the perception and memory versions of the task.  Hence, while the degree of separability of the features affected processing architecture, wether the task was perceptual or mnemonic did not.  This combination of results provides a form of discriminative validity for the statistical methods.  They are sensitive to the structure in the data in a reasonable way.
+
+There was a marked lack of heterogeneity of processing architecture.  The general model fared poorly overall and was competitive only in Experiment~2A.  Here, we do observe an extreme value of MIC from a single individual that could not be regularized had outsized leverage.  Outside of this observation, processing strategy seems to be the same for all people within a given task.  This result indicates that in a given setting architecture may be universal rather than under strategic control.  Methodological approaches that rely on categorization \parencite[e.g.,][]{Houpt:Fific:2017} implicitly assume heterogeneity and may understate the evidence for these substantively important regularities.
+
+Perhaps the invariance of processing across perception and memory tasks reflects the low mnemonic demands.  In most working memory tasks, participants are asked to hold more than one item.  Indeed, the goal of most experiments is to push participants past their limits so that errors may be observed.  It may be that binding or chunking of features is a consequence of having higher mnemonic demands, and  for these stimuli presented in these configurations, the mnemonic demands were simply too low.  Therefore, we treat the invariance result tentatively---it is noteworthy but certainly not yet definitive evidence against chunking or binding.  How to increase mnemonic demands in this type of investigation to provide a more convincing test of chunking remains an open topic.
+
+The final result and issue for discussion is a comparison of models without individual variability (serial, parallel-1, coactive-1) vs. those with it (general, parallel-2, coactive-2).  The models without individual differences outperformed those that had them.  This constellation might strike some as counterintuitive.  It is nearly ubiquitous that individual variation is reported and expected across most tasks of human performance.  And yet, we found evidence against such individual variation in the interaction parameter.    The case is similar to our previous findings with reading speeds.  \textcite{Rouder:etal:2008d} provided a hierarchical Bayesian analysis of how lexical decision times varied with word frequency.  The found that all individuals had the same 11\% decline per doubling of word frequency.  There was no evidence of deviation from this 11\% value across the 50 participants.  Likewise, \textcite{Haaf:Rouder:2017} found that much of the variability across individual in Stroop, Simon, and Eriksen flanker tasks was due to trial noise rather than from true individual variability.  
+
+Some readers may find it difficult to consider models without true individual variation.     These models are probably good descriptions when the sample sizes (trials per participant) are not too large.  For the resolution afforded by the data at hand, there is no need to consider individual variation.  However, it may be the case with larger sample sizes, that models with individual variation are warranted.  In this spirit, we recommend that models with constant effects be retained and taken seriously because at a minimum they indicate whether the data are sufficiently numerous to resolve individual variation.   In this case, they do not provide such resolution.  More generally, the results show that it takes evidence to document individual differences.  Given the relative small size of individual variation in common cognitive tasks such as the ones here, it may take much larger sample sizes per individual to obtain this evidence than it is commonly assumed.
+
+\printbibliography
+\end{document}

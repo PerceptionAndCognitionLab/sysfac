@@ -97,7 +97,7 @@ doBayes=function(dat,r.mean=.167,r.indv=.111,my.iter=10000)
 	}
 	g=c(rep(0:3,each=I),4,5,6)
 	gen=nWayAOV(y,X,g,rscale=c(1,rep(r.indv,3),rep(r.mean,3)),iterations=my.iter)
-	genSamp=nWayAOV(y,X,g,rscale=c(1,rep(r.indv,3),rep(r.mean,3)),posterior=T)
+	genSamp=nWayAOV(y,X,g,rscale=c(1,rep(r.indv,3),rep(r.mean,3)),posterior=T,iterations=my.iter)
 	###Serial
 	Xs=matrix(0,nrow=N,ncol=3*I+2)
 	for (n in 1:N)
@@ -124,7 +124,7 @@ doBayes=function(dat,r.mean=.167,r.indv=.111,my.iter=10000)
 	}
 	g1=c(rep(0:2,each=I),3:5)
 	one=nWayAOV(y,X1,g1,rscale=c(1,rep(r.indv,2),rep(r.mean,3)),iterations=my.iter)
-	oneSamp=nWayAOV(y,X1,g1,rscale=c(1,rep(r.indv,2),rep(r.mean,3)),posterior=T)
+	oneSamp=nWayAOV(y,X1,g1,rscale=c(1,rep(r.indv,2),rep(r.mean,3)),posterior=T,iterations=my.iter)
 	oneGamma=oneSamp[,3*I+4]
 	posMult=(mean(oneGamma>0))/.5
 	negMult=(mean(oneGamma<0))/.5
@@ -135,7 +135,7 @@ doBayes=function(dat,r.mean=.167,r.indv=.111,my.iter=10000)
 	#prior computation for par1, cov1
 	M=100000
 	all=1:M
-	mu.gamma=rnorm(M,0,r.mean)
+	mu.gamma=rcauchy(M,0,r.mean)
 	s2.gamma=rinvgamma(M,.5,.5*r.indv*r.indv)
 	for (m in 1:M)
 	{
@@ -169,11 +169,42 @@ doMeanPlotA=function(dat,...)
 	N=length(a)
 	I=max(sub)
 	mrt=tapply(y,list(a,b),mean)
+    se=sqrt(mean(tapply(y,list(a,b,sub),var))/I) 
 	matplot(1:2,t(mrt),axes=F,ylab="Response Time (sec)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l',xlim=c(.9,2.1),xlab="Change in Angle",...)
 	matpoints(1:2,t(mrt),pch=21,bg=c('white','blue'),col=1,cex=1.2)
     axis(2)
 	axis(1,at=1:2,labels=c("Low","High"))
 	box()
+	m1=((mrt[1,1]-mrt[1,2])+(mrt[2,1]-mrt[2,2]))/2
+	m2=((mrt[1,1]-mrt[2,1])+(mrt[1,2]-mrt[2,2]))/2
+	return(c(m1,m2))
+}
+
+mySE=function(ao,I)
+{
+	SS=ao[[2]][[1]][[2]][2]+ao[[3]][[1]][[2]][2]+ao[[4]][[1]][[2]][2]
+	df=ao[[2]][[1]][[1]][2]+ao[[3]][[1]][[1]][2]+ao[[4]][[1]][[1]][2]
+	se=sqrt((SS/df)/I)
+	return(se)
+}
+
+doMeanPlotAwErr=function(dat,...)
+{
+	dat=dat[dat$bothDiff==1,]
+	mrt=tapply(dat$rt,list(dat$sizeChange,dat$angleChange,dat$sub),mean)
+	newDat=as.data.frame.table(mrt)	
+	colnames(newDat)=c("size","angle","sub","rt")
+	ao=summary(aov(rt~size*angle+Error(sub/(size*angle)),data=newDat))
+	I=length(levels(newDat$sub))
+	eb=mySE(ao,I)*qt(.975,I-1)
+	mrt=tapply(newDat$rt,list(newDat$size,newDat$angle),mean)
+	matplot(1:2,t(mrt),axes=F,ylab="Response Time (sec)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l',xlim=c(.9,2.1),xlab="Change in Angle",...)
+	arrows(1:2,t(mrt)[,1]-eb,1:2,t(mrt)[,1]+eb,code=3,angle=90,length=.1)
+	arrows(1:2,t(mrt)[,2]-eb,1:2,t(mrt)[,2]+eb,code=3,angle=90,length=.1)
+	matpoints(1:2,t(mrt),pch=21,bg=c('white','blue'),col=1,cex=1.2)
+    axis(2)
+	axis(1,at=1:2,labels=c("Low","High"))
+	box()	
 	m1=((mrt[1,1]-mrt[1,2])+(mrt[2,1]-mrt[2,2]))/2
 	m2=((mrt[1,1]-mrt[2,1])+(mrt[1,2]-mrt[2,2]))/2
 	return(c(m1,m2))
@@ -200,6 +231,28 @@ doMeanPlotB=function(dat,...)
 	return(c(m1,m2))
 }
 
+
+doMeanPlotBwErr=function(dat,...)
+{
+	dat=dat[dat$bothDiff==1,]
+	mrt=tapply(dat$rt,list(dat$sizeChange,dat$angleChange,dat$sub),mean)
+	newDat=as.data.frame.table(mrt)	
+	colnames(newDat)=c("size","angle","sub","rt")
+	ao=summary(aov(rt~size*angle+Error(sub/(size*angle)),data=newDat))
+	I=length(levels(newDat$sub))
+	eb=mySE(ao,I)*qt(.975,I-1)
+	mrt=tapply(newDat$rt,list(newDat$size,newDat$angle),mean)
+	matplot(1:2,t(mrt),axes=F,ylab="Response Time (sec)",lty=1:2,lwd=2,col=c('black','darkblue'),typ='l',xlim=c(.9,2.1),xlab="Change in Digit",...)
+	arrows(1:2,t(mrt)[,1]-eb,1:2,t(mrt)[,1]+eb,code=3,angle=90,length=.1)
+	arrows(1:2,t(mrt)[,2]-eb,1:2,t(mrt)[,2]+eb,code=3,angle=90,length=.1)
+	matpoints(1:2,t(mrt),pch=21,bg=c('white','blue'),col=1,cex=1.2)
+    axis(2)
+	axis(1,at=1:2,labels=c("Low","High"))
+	box()	
+	m1=((mrt[1,1]-mrt[1,2])+(mrt[2,1]-mrt[2,2]))/2
+	m2=((mrt[1,1]-mrt[2,1])+(mrt[1,2]-mrt[2,2]))/2
+	return(c(m1,m2))
+}
 
 	
 doEmpiricalPlot=function(dat,plot=T,...)
