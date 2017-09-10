@@ -19,19 +19,16 @@
 
 \leftheader{Thiele et al.}
 
-\author{Jonathan E. Thiele, Julia M. Haaf, and Jeffrey N. Rouder}
+\twoauthors{Jonathan E. Thiele and Julia M. Haaf}{Jeffrey N. Rouder}
 
-\authornote{Jeff Rouder, Department of
-Psychological Sciences, 210 McAlester Hall, University of Missouri,
-Columbia, MO 65211, rouderj@missouri.edu.  This research was
-supported by National Science Foundation grants BCS-1240359 and SES-102408.
+\authornote{Jeff Rouder, Department of Cognitive Science, University of California, Irvine, jrouder@uc.edu.  This research was originally reported in Jonathan Thiele's dissertation at the University of Missouri.  It was supported by National Science Foundation grants BCS-1240359 and SES-102408.
 
 The data in this paper was collected under a {\em Born Open Data} protocol \parencite{Rouder:2016} in which they were automatically logged, uploaded, and made freely available as they were created (\url{https://github.com/PerceptionCognitionLab/data1/tree/master/sysfactorial}).  This paper was prepared in LaTeX with R code for data analysis knitted into the document.  The LaTeX and R source are freely available at  \url{https://github.com/PerceptionAndCognitionLab/sysfac}.} 
 
 
-\title{Bayesian Analysis for Systems Factorial Technology}
+\title{Is There Variation Across Individuals in Processing? Bayesian Analysis for Systems Factorial Technology}
 
-\affiliation{University of Missouri}
+\twoaffiliations{University of Missouri}{Univeristy of California, Irvine\\University of Missouri}
 
 
 \abstract{Systems factorial technology \parencite{Townsend:Nozawa:1995} is a leading methodology for assessing the processing of multiple-feature items.  By using certain experimental designs and analyses, researchers can assess wether features are processed in serial, in parallel, or coactively.  Current practice is to categorize each individual as displaying one of these three architectures.  We argue this approach implicitly assumes heterogeneity of processing strategies across participants.  A more scientifically meaningful approach may be to first ask whether all people are serial or parallel or coactive before assuming heterogeneity.  We develop a series of Bayesian hierarchical models that captures both situations where everyone follows a common architecture and, alternatively, where there is heterogeneity in architecture.  These models use g-prior structures that make computation of Bayes factors convenient.  We report an application to investigate Miller's (1956) notion of chunking.  We asked participants to compare object that are composed of separable features simultaneously, a perception task, and sequentially, a memory task.  We assessed whether processing changed across the perception and memory tasks with the notion that participants might have to chunk features to store them, and that this chunking might make processing more efficient.  The answer is ``no."  We find a serial architecture for processing for highly separable features (size of circle and the orientation of its diameter) in both the perception and memory tasks.  We also find parallel processing for less separable features (first and second digit in a two-digit number) in both perception and memory tasks.  Taken together, while processing may depend on the separability of features, it does not vary across perception and memory.  As importantly, we find that all people had the same processing strategy; that is models that stated no heterogeneity outperformed those with heterogeneity.  This result indicates that architecture may be universal in this setting and not under strategic control.}
@@ -266,7 +263,7 @@ print(p)
 \begin{figure}
 \centering
 \includegraphics[width=4.5in]{simFig.pdf}
-\caption{Simulation with misspecifications.  {\bf A.} Simulated data were drawn from an ex-Gaussian; the scale of the exponential component varied with condition.  {\bf B.} Ground truth interaction distributions across hypothetical participants.  The serial truth is the spike at zero, the coactive truth is the positive distribution, the unconstrained truth follows the broad normal.  {\bf Middle and Bottom Row}.  Bayes factor results for various ground truths.  The true model was set to 1.0 on each run, and for the vast majority of runs, the true model was most preferred. }   
+\caption{Simulation with misspecifications.  {\bf A.} Simulated data were drawn from an ex-Gaussian; the scale of the exponential component varied with condition.  {\bf B.} Ground truth interaction distributions across hypothetical participants.  The serial truth is the spike at zero, the coactive truth is the positive distribution, the unconstrained truth follows the broad normal.  {\bf Middle and Bottom Rows}.  Bayes factor results for various ground truths.  The true model was set to 1.0 on each run, and for the vast majority of runs, the true model was most preferred. }   
 \label{sim}
 \end{figure}
 

@@ -1,0 +1,24 @@
+\section{Appendix}
+
+Prior specification is needed for $\sigma^2$, the common variance, and for vectors $\bfeta$, $\bfalpha$ and $\bfbeta$.  The prior on $\sigma^2$ is $\sigma^2 \sim \mbox{Inverse Gamma} \left(2,\frac{1}{4}\right)$.   The induced prior on standard deviation has sizable mass above 180 ms, peaks at about 400 ms, and slowly tails off with a fat tail that allows standard deviations as large as 2 seconds.  This prior though informative is sufficiently broad for response times in simple tasks such as those reported here.
+
+The remaining parameters are individual-specific effects, and we chose to model them as  unconstrained random effects with a hierarchical structure:
+\begin{eqa*}
+\eta_i &\sim& \mbox{Normal}\left(\nu_{1},\delta_{1}\right),\\
+\alpha_i &\sim& \mbox{Normal}\left(\nu_{2},\delta_{2}\right),\\
+\beta_i &\sim& \mbox{Normal}\left(\nu_{3},\delta_{3}\right),
+\end{eqa*}
+where $\nu$ and $\delta$ are respective group mean and variances.  Priors on the group mean parameters are
+\[
+\nu_{1} \sim \mbox{Normal}(2,1),\quad
+\nu_{2} \sim \mbox{Normal}\left(0,.032^2\right),\quad 
+\nu_{3} \sim \mbox{Normal}\left(0,.032^2\right).
+\]
+
+The scale on main effects are tuned, but are reasonable for the size of effects in cognitive psychology.
+The priors on the group variance parameters are 
+\[
+\delta_{k} \sim \mbox{Inverse-Gamma}\left(3,\frac{1}{5}\right), \quad k=1,2,3.
+\]
+
+\end{document}

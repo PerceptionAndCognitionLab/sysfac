@@ -1,0 +1,667 @@
+\section{Appendix}
+
+\subsection{Normal Model}
+
+For participant $i = 1,...,I$, level of factor A $j = 1,2$,
+level of factor B $k = 1,2$, and replicate $\ell =
+1,...,L_{ijk}$, the common framework assumptions are as follows:\\
+\begin{eqnarray*}
+y_{ijk\ell} &\sim& \mbox{Normal}\left(\mu_{ijk},\sigma^2\right)\\
+\mu_{ijk} &=& \eta_i + \alpha_is(j) + \beta_is(k) + \gamma_is(j)s(k)\\
+\eta_i &\sim& \mbox{Normal}\left(\nu_{\eta},\delta_{\eta}\right)\\
+\alpha_i &\sim& \mbox{Normal}\left(\nu_{\alpha},\delta_{\alpha}\right)\\
+\beta_i &\sim& \mbox{Normal}\left(\nu_{\beta},\delta_{\beta}\right)\\
+\sigma^2 &\sim& \mbox{Inverse-Gamma}\left(a_{\sigma},b_{\sigma}\right)\\
+\nu_{\eta} &\sim& \mbox{Normal}\left(\phi_{\eta},\theta_{\eta}\right)\\
+\nu_{\alpha} &\sim& \mbox{Normal}\left(\phi_{\alpha},\theta_{\alpha}\right)\\
+\nu_{\beta} &\sim& \mbox{Normal}\left(\phi_{\beta},\theta_{\beta}\right)\\
+\delta_{\eta} &\sim& \mbox{Inverse-Gamma}\left(a_{\eta},b_{\eta}\right)\\
+\delta_{\alpha} &\sim& \mbox{Inverse-Gamma}\left(a_{\alpha},b_{\alpha}\right)\\
+\delta_{\beta} &\sim& \mbox{Inverse-Gamma}\left(a_{\beta},b_{\beta}\right)\\
+\end{eqnarray*}
+
+The specific assumptions are as follows:
+
+\subsubsection{Serial Model}
+Because the MIC predicted by serial processing is zero, this model
+assumes that all interaction parameters, $\gamma_i$ are exactly zero.
+Because these parameters are all constant, there is no need for any
+further hierarchical specification in this model.
+
+\subsubsection{General Model}
+The general model places minimal constraint on the possible range of
+the interaction parameters.  For the purposes of this current
+research, we will assume that the interaction parameters each follow a
+normal distribution with a hierarchical structure described as follows:
+\begin{eqnarray*}
+\gamma_i &\sim& \mbox{Normal}\left(\nu_{\gamma},\delta_{\gamma}\right)\\
+\nu_{\gamma} &\sim& \mbox{Normal}\left(\phi_{\gamma},\theta_{\gamma}\right)\\
+\delta_{\gamma} &\sim& \mbox{Inverse-Gamma}\left(a_{\gamma},b_{\gamma}\right)\\
+\end{eqnarray*}
+where $\phi_{\gamma}$, $\theta_{\gamma}$, $a_{\gamma}$, and
+$b_{\gamma}$ are hyperparameters that are specified before analysis.
+
+
+\subsubsection{Parallel Model}
+Because parallel processing predicts negative MICs, this model assumes
+that all interaction parameters must be negative.  This is
+accomplished by the following restrictions. For Parallel-1:
+\begin{eqnarray*}
+\gamma_i &\sim& \mbox{Normal}^-(\nu_{\gamma},\delta_{\gamma})
+\end{eqnarray*}
+with the above distribution being the half-normal distribution "centered" at $\nu_{\gamma}$ and restricted to negative values. 
+For Parallel-2, the interaction effect is treated as being identical across all participants:
+\begin{eqnarray*}
+\gamma_i &=& \gamma_0 \forall i\\
+\gamma_0 &\sim& \mbox{Normal}^-(\nu_{\gamma},\delta_{\gamma})
+\end{eqnarray*}
+This limitation to the support set constitutes the sign constraint needed for this model and only allows interaction parameters to equal zero in order to allow for Savage-Dickey estimation.  The priors placed on $\nu_{\gamma}$ and $\delta_{\gamma}$ for the parallel model are identical to those used in the General model.
+
+
+\subsubsection{Coactive Model}
+Because coactive processing predicts positive MICs, this model assumes
+that all interaction parameters must be positive.  This is
+accomplished by the following restrictions. For Coactive-1:
+\begin{eqnarray*}
+\gamma_i &\sim& \mbox{Normal}^+(\nu_{\gamma},\delta_{\gamma})
+\end{eqnarray*}
+with the above distribution being the half-normal distribution "centered" at $\nu_{\gamma}$ and restricted to positive values. 
+For Coactive-2, the interaction effect is treated as being identical across all participants:
+\begin{eqnarray*}
+\gamma_i &=& \gamma_0 \forall i \\
+\gamma_0 &\sim& \mbox{Normal}^+(\nu_{\gamma},\delta_{\gamma})
+\end{eqnarray*}
+This limitation to the support set constitutes the sign constraint needed for this model and only allows interaction parameters to equal zero in order to allow for Savage-Dickey estimation.  The priors placed on $\nu_{\gamma}$ and $\delta_{\gamma}$ for the parallel model are identical to those used in the General model.
+
+
+\subsubsection{Joint Distribution and Posterior Derivation of Common Parameters}
+Because the common parameters are independent of the specific
+parameters and only depend on them when they are assumed to be known,
+the priors for the model-specific parameters are effectively
+normalizing constants that can be dropped during derivation up to
+proportionality.  As such, those distributions are of no interest to
+the current joint analysis and will be omitted.  Consequently, the
+joint distribution of all common parameters is as follows:\\
+\begin{eqnarray*}
+&f\left(Y,\vec{\eta},\vec{\alpha},\vec{\beta},\vec{\gamma},\sigma^2,
+\nu_{\eta},\nu_{\alpha},\nu_{\beta},\nu_{\gamma},\delta_{\eta},\delta_{\alpha},
+\delta_{\beta},\delta_{\gamma}\right)&\\
+&\displaystyle{\propto\prod_{i}\prod_{j}\prod_{k}\prod_{l}\left(2\pi\sigma^2\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(y_{ijk\ell}-\mu_{ijk}\right)^2}{2\sigma^2}\right)
+\times\prod_i\left(2\pi\delta_{\eta}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\eta_i-\nu_{\eta}\right)^2}{2\delta_{\eta}}\right)}&\\
+&\displaystyle{\times\prod_i\left(2\pi\delta_{\alpha}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\alpha_i-\nu_{\alpha}\right)^2}{2\delta_{\alpha}}\right)
+\times\prod_i\left(2\pi\delta_{\beta}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\beta_i-\nu_{\beta}\right)^2}{2\delta_{\beta}}\right)}&\\
+&\displaystyle{\times\frac{b_{\sigma}^{a_{\sigma}}}{\Gamma\left(a_{\sigma}\right)}\left(\sigma^2\right)^{-a_{\sigma}-1}\exp\left(-\frac{b_{\sigma}}{\sigma^2}\right)
+\times\left(2\pi\theta_{\eta}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\nu_{\eta}-\phi_{\eta}\right)^2}{2\theta_{\eta}}\right)}&\\
+&\displaystyle{\times\left(2\pi\theta_{\alpha}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\nu_{\alpha}-\phi_{\alpha}\right)^2}{2\theta_{\alpha}}\right)
+\times\left(2\pi\theta_{\beta}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\nu_{\beta}-\phi_{\beta}\right)^2}{2\theta_{\beta}}\right)}&\\
+&\displaystyle{
+\times\frac{b_{\eta}^{a_{\eta}}}{\Gamma\left(a_{\eta}\right)}\delta_{\eta}^{-a_{\eta}-1}\exp\left(-\frac{b_{\eta}}{\delta_{\eta}}\right)
+%}&\\
+%&\displaystyle{
+\times\frac{b_{\alpha}^{a_{\alpha}}}{\Gamma\left(a_{\alpha}\right)}\delta_{\alpha}^{-a_{\alpha}-1}\exp\left(-\frac{b_{\alpha}}{\delta_{\alpha}}\right)
+\times\frac{b_{\beta}^{a_{\beta}}}{\Gamma\left(a_{\beta}\right)}\delta_{\beta}^{-a_{\beta}-1}\exp\left(-\frac{b_{\beta}}{\delta_{\beta}}\right)}&\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+&\displaystyle{\propto\left(2\pi\sigma^2\right)^{-\frac{\sum_i\sum_j\sum_kL_{ijk}}{2}}\exp\left(-\frac{\sum_i\sum_j\sum_k\sum_l\left(y_{ijk\ell}-\eta_i-\alpha_i\left(-1\right)^{j}-\beta_i\left(-1\right)^{k}-\gamma_i\left(-1\right)^{j+k}\right)^2}{2\sigma^2}\right)}&\\
+&\displaystyle{\times\left(2\pi\delta_{\eta}\right)^{-\frac{I}{2}}\exp\left(-\frac{\sum_i\left(\eta_i-\nu_{\eta}\right)^2}{2\delta_{\eta}}\right)
+\times\left(2\pi\delta_{\alpha}\right)^{-\frac{I}{2}}\exp\left(-\frac{\sum_i\left(\alpha_i-\nu_{\alpha}\right)^2}{2\delta_{\alpha}}\right)}&\\
+&\displaystyle{\times\left(2\pi\delta_{\beta}\right)^{-\frac{I}{2}}\exp\left(-\frac{\sum_i\left(\beta_i-\nu_{\beta}\right)^2}{2\delta_{\beta}}\right)
+\times\frac{b_{\sigma}^{a_{\sigma}}}{\Gamma(a_{\sigma})}\left(\sigma^2\right)^{-a_{\sigma}-1}\exp\left(-\frac{b_{\sigma}}{\sigma^2}\right)}&\\
+&\displaystyle{\times\left(2\pi\theta_{\eta}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\nu_{\eta}-\phi_{\eta}\right)^2}{2\theta_{\eta}}\right)
+\times\left(2\pi\theta_{\alpha}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\nu_{\alpha}-\phi_{\alpha}\right)^2}{2\theta_{\alpha}}\right)}&\\
+&\displaystyle{\times\left(2\pi\theta_{\beta}\right)^{-\frac{1}{2}}\exp\left(-\frac{\left(\nu_{\beta}-\phi_{\beta}\right)^2}{2\theta_{\beta}}\right)
+\times\frac{b_{\eta}^{a_{\eta}}}{\Gamma(a_{\eta})}\delta_{\eta}^{-a_{\eta}-1}\exp\left(-\frac{b_{\eta}}{\delta_{\eta}}\right)}&\\
+&\displaystyle{\times\frac{b_{\alpha}^{a_{\alpha}}}{\Gamma(a_{\alpha})}\delta_{\alpha}^{-a_{\alpha}-1}\exp\left(-\frac{b_{\alpha}}{\delta_{\alpha}}\right)
+\times\frac{b_{\beta}^{a_{\beta}}}{\Gamma(a_{\beta})}\delta_{\beta}^{-a_{\beta}-1}\exp\left(-\frac{b_{\beta}}{\delta_{\beta}}\right)}&\\
+\end{eqnarray*}
+
+This result is proportional because the distributions for $\gamma_i$,
+$\nu_{\gamma}$, and $\delta_{\gamma}$ are not inlcuded in the above
+formulation.  This is because those distributions do not contain any
+factors of the above common parameters and, consequently, are of
+constant value with respect to them.  Thus, using the above joint
+distribution to solve the posterior distribution of any common
+parameter is equivalent to using the full joint for any given model.
+With that in mind, the posterior distributions for the common
+parameters are given as follows:
+
+$\eta_i$:
+\begin{eqnarray*}
+f(\eta_i|\cdot)&\propto&\exp\left(-\frac{\sum_j\sum_k\sum_l\left(y_{ijk\ell}-\eta_i-\alpha_i\left(-1\right)^{j}-\beta_i\left(-1\right)^{k}-\gamma_i\left(-1\right)^{j+k}\right)^2}{2\sigma^2}\right)\\
+&&\times\exp\left(-\frac{\left(\eta_i-\nu_{\eta}\right)^2}{2\delta_{\eta}}\right)\\
+&*&\left(y_{ijk\ell}-\eta_i-\alpha_i\left(-1\right)^{j}-\beta_i\left(-1\right)^{k}-\gamma_i\left(-1\right)^{j+k}\right)^2\\
+&&=y_{ijk\ell}^2+\eta_i^2+\alpha_i^2(-1)^{2j}+\beta_i^2(-1)^{2k}+\gamma_i^2(-1)^{2j+2k}-2y_{ijk\ell}\eta_i\\
+&&-2y_{ijk\ell}\alpha_i(-1)^j-2y_{ijk\ell}\beta_i(-1)^k-2y_{ijk\ell}\gamma_i(-1)^{j+k}+2\eta_i\alpha_i(-1)^j\\
+&&+2\eta_i\beta_i(-1)^k+2\eta_i\gamma_i(-1)^{j+k}+2\alpha_i\beta_i(-1)^{j+k}+2\alpha_i\gamma_i(-1)^{2j+k}\\
+&&+2\beta_i\gamma_i(-1)^{j+2k}\\
+&&=\eta_i^2-2y_{ijk\ell}\eta_i+2\eta_i\alpha_i(-1)^j+2\eta_i\beta_i(-1)^k+2\eta_i\gamma_i(-1)^{j+k}+y_{ijk\ell}^2\\
+&&+\alpha_i^2(-1)^{2j}+\beta_i^2(-1)^{2k}+\gamma_i^2(-1)^{2j+2k}-2y_{ijk\ell}\alpha_i(-1)^j-2y_{ijk\ell}\beta_i(-1)^k\\
+&&-2y_{ijk\ell}\gamma_i(-1)^{j+k}+2\alpha_i\beta_i(-1)^{j+k}+2\alpha_i\gamma_i(-1)^{2j+k}+2\beta_i\gamma_i(-1)^{j+2k}\\
+\Rightarrow f(\eta_i|\cdot)&\propto&\exp\left(-\frac{\sum_j\sum_k\sum_l\eta_i^2-2y_{ijk\ell}\eta_i+2\eta_i\alpha_i(-1)^j+2\eta_i\beta_i(-1)^k+2\eta_i\gamma_i(-1)^{j+k}}{2\sigma^2}\right)\\
+&&\times\exp\left(-\frac{\eta_i^2-2\eta_i\nu_{\eta}}{2\delta_{\eta}}\right)\\
+&=&\exp\left(-\frac{L_{i\cdot\cdot}\eta_i^2-2\eta_i\left(\sum_j\sum_k\sum_ly_{ijk\ell}-\sum_j\alpha_i(-1)^jL_{ij\cdot}-\sum_k\beta_i(-1)^kL_{i\cdot k}\right.}{2\sigma^2}\right.\\
+&&\left.\frac{\left.-\sum_j\sum_k\gamma_i(-1)^{j+k}L_{ijk}\right)}{}\right)\times\exp\left(-\frac{\eta_i^2-2\eta_i\nu_{\eta}}{2\delta_{\eta}}\right)\\
+\end{eqnarray*}
+for $L_{i\cdot k} = \sum_jL_{ijk}$, $L_{ij\cdot} = \sum_kL_{ijk}$, and $L_{i\cdot\cdot} = \sum_j\sum_kL_{ijk}$\\
+\begin{eqnarray*}
+&=&\exp\left(-\frac{1}{2}\left[\eta_i^2\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right)-2\eta_i\left(\frac{L_{i\cdot\cdot}\bar{y}_{ijk\ell}-L_{i\alpha}\alpha_i-L_{i\beta}\beta_i-L_{i\gamma}\gamma_i}{\sigma^2}+\frac{\nu_{\eta}}{\delta_{\eta}}\right)\right]\right)\\
+\end{eqnarray*}
+for $L_{i\alpha}=L_{i2\cdot}-L_{i1\cdot}$, $L_{i\beta}=L_{i\cdot 2}-L_{i\cdot 1}$, and $L_{i\gamma}=L_{i22}+L_{i11}-L_{i12}-L_{i21}$\\
+\begin{eqnarray*}
+&=&\exp\left(-\frac{1}{2}\left[\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right]\left[\eta_i^2-2\eta_i\left(\frac{L_{i\cdot\cdot}\bar{y}_{ijk\ell}-L_{i\alpha}\alpha_i-L_{i\beta}\beta_i-L_{i\gamma}\gamma_i}{\sigma^2}+\frac{\nu_{\eta}}{\delta_{\eta}}\right)\right.\right.\\
+&&\left.\left.\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right)^{-1}\right]\right)\\
+\Rightarrow \eta_i|\cdot &\sim& \mbox{Normal}\left(\left(\frac{L_{i\cdot\cdot}\bar{y}_{ijk\ell}-L_{i\alpha}\alpha_i-L_{i\beta}\beta_i-L_{i\gamma}\gamma_i}{\sigma^2}+\frac{\nu_{\eta}}{\delta_{\eta}}\right)\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right)^{-1},\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right)^{-1}\right)\\
+\end{eqnarray*}
+Ideally, $L_{i\alpha}$, $L_{i\beta}$, and $L_{i\gamma}$ would all
+equal 0 and all non-data-related terms would fall out of the
+posterior, but these factors are being included in the event that one
+or more of these factorial manipulations isn't equally represented,
+whether this failure to include is a result of data cleaning, poor
+experiment coding, or some unforseen accident.\\
+
+$\alpha_{i}$:
+Although the terms kept in the exp function are different, specifically
+\begin{eqnarray*}
+&&\alpha_i^2(-1)^{2j}-2y_{ijk\ell}\alpha_i(-1)^j+2\eta_i\alpha_i(-1)^j+2\alpha_i\beta_i(-1)^{j+k}+2\alpha_i\gamma_i(-1)^{2j+k}\\ 
+&=& \alpha_i^2-2y_{ijk\ell}\alpha_i(-1)^j+2\eta_i\alpha_i(-1)^j+2\alpha_i\beta_i(-1)^{j+k}+2\alpha_i\gamma_i(-1)^k)\\
+&\Rightarrow&\sum_j\sum_k\sum_l\alpha_i^2-2y_{ijk\ell}\alpha_i(-1)^j+2\eta_i\alpha_i(-1)^j+2\alpha_i\beta_i(-1)^{j+k}+2\alpha_i\gamma_i(-1)^{k}\\
+&=&L_{i\cdot\cdot}\alpha_i^2-2\alpha_i\left(\sum_j\sum_k\sum_ly_{ijk\ell}(-1)^j-L_{i\alpha}\eta_i-L_{i\gamma}\beta_i-L_{i\beta}\gamma_i\right)\\
+\end{eqnarray*}
+the derivation for $f(\alpha_i|\cdot)$ is similar to that for
+$f(\eta_i|\cdot)$.  As such, only the posterior will be listed here as
+a space-saving measure.
+\begin{eqnarray*}
+\alpha_i|\cdot&\sim&\mbox{Normal}\left(\left(\frac{\sum_j\sum_k\sum_l\bar{y}_{ijk\ell}(-1)^j-L_{i\alpha}\eta_i-L_{i\gamma}\beta_i-L_{i\beta}\gamma_i}{\sigma^2}+\frac{\nu_{\eta}}{\delta_{\eta}}\right)\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right)^{-1}\right.\\
+&&\left.,\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right)^{-1}\right)\\
+\end{eqnarray*}
+
+$\beta_{i}$:\\
+Similarly to $\alpha_i$,
+\begin{eqnarray*}
+&&\beta_i^2(-1)^{2k}-2y_{ijk\ell}\beta_i(-1)^k+2\eta_i\beta_i(-1)^k+2\alpha_i\beta_i(-1)^{j+k}+2\beta_i\gamma_i(-1)^{j+2k}\\
+&=&\beta_i^2-2y_{ijk\ell}\beta_i(-1)^k+2\eta_i\beta_i(-1)^k+2\alpha_i\beta_i(-1)^{j+k}+2\beta_i\gamma_i(-1)^j\\
+&\Rightarrow&\sum_j\sum_k\sum_l\beta_i^2-2y_{ijk\ell}\beta_i(-1)^k+2\eta_i\beta_i(-1)^k+2\alpha_i\beta_i(-1)^{j+k}+2\beta_i\gamma_i(-1)^j\\
+&=&L_{i\cdot\cdot}\beta_i^2-2\beta\left(\sum_j\sum_k\sum_ly_{ijk\ell}(-1)^k-L_{i\beta}\eta_i-L_{i\gamma}\alpha_i-L_{i\alpha}\gamma_i\right)\\
+\end{eqnarray*}
+comprises the terms kept inside the exp function, with the remaining
+derivation of $f(\beta_i|\cdot)$ being similar to the derivations of
+$f(\eta_i|\cdot)$ and $f(\alpha_i|\cdot)$.  Thus, the posterior for
+$\beta_i|\cdot$ is,
+\begin{eqnarray*}
+\beta_i|\cdot&\sim&\mbox{Normal}\left(\left(\frac{\sum_j\sum_k\sum_l\bar{y}_{ijk\ell}(-1)^k-L_{i\beta}\eta_i-L_{i\gamma}\alpha_i-L_{i\alpha}\gamma_i}{\sigma^2}+\frac{\nu_{\eta}}{\delta_{\eta}}\right)\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right)^{-1}\right.\\
+&&\left.,\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\eta}}\right)^{-1}\right)\\
+\end{eqnarray*}
+
+$\sigma^2$:\\
+\begin{eqnarray*}
+f(\sigma^2|\cdot)&\propto&\left(2\pi\sigma^2\right)^{-\frac{\sum_i\sum_j\sum_kL_{ijk}}{2}}\exp\left(-\frac{\sum_i\sum_j\sum_k\sum_l\left(y_{ijk\ell}-\mu_{ijk}\right)^2}{2\sigma^2}\right)\\
+&&\times\frac{b_{\sigma}^{a_{\sigma}}}{\Gamma\left(a_{\sigma}\right)}\left(\sigma^2\right)^{-a_{\sigma}-1}\exp\left(-\frac{b_{\sigma}}{\sigma^2}\right)\\
+&\propto&\left(\sigma^2\right)^{-\frac{L_{\cdots}}{2}-a_{\sigma}-1}\exp\left(-\frac{1}{\sigma^2}\left[\frac{\sum_i\sum_j\sum_k\sum_l\left(y_{ijk\ell}-\mu_{ijk}\right)^2}{2}+b_{\sigma}\right]\right)\\
+\end{eqnarray*}
+for $L_{\cdots} = \sum_i\sum_j\sum_kL_{ijk}$.\\
+\begin{eqnarray*}
+\Rightarrow \sigma^2|\cdot &\sim& \mbox{Inverse-Gamma}\left(\frac{L_{\cdots}}{2}+a_{\sigma},\frac{\sum_i\sum_j\sum_k\sum_l\left(y_{ijk\ell}-\mu_{ijk}\right)^2}{2}+b_{\sigma}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\sigma^2|\cdot &\sim& \mbox{Inverse-Gamma}\left(\frac{L_{\cdots}}{2}+2,\frac{\sum_i\sum_j\sum_k\sum_l\left(y_{ijk\ell}-\mu_{ijk}\right)^2}{2}+\frac{1}{4}\right)\\
+\end{eqnarray*}
+
+$\nu_{\eta}$:\\
+\begin{eqnarray*}
+f(\nu_{\eta}|\cdot)&\propto&\exp\left(-\frac{\sum_i(\eta_i-\nu_{\eta})^2}{2\delta_{\eta}}\right)\times\exp\left(-\frac{(\nu_{\eta}-\phi_{\eta})^2}{2\theta_{\eta}}\right)\\
+&=&\exp\left(-\frac{\sum_i(\eta_i^2-2\eta_i\nu_{\eta}+\nu_{\eta}^2)}{2\delta_{\eta}}\right)\times\exp\left(-\frac{\nu_{\eta}^2-2\nu_{\eta}\phi_{\eta}+\phi_{\eta}^2}{2\theta_{\eta}}\right)\\
+&\propto&\exp\left(-\frac{1}{2}\left[\frac{-2\nu_{\eta}\sum_i\eta_i+I\nu_{\eta}^2}{\delta_{\eta}}+\frac{\nu_{\eta}^2-2\nu_{\eta}\phi_{\eta}}{\theta_{\eta}}\right]\right)\\
+&=&\exp\left(-\frac{1}{2}\left[\nu_{\eta}^2\left(\frac{I}{\delta_{\eta}}+\frac{1}{\theta_{\eta}}\right)-2\nu_{\eta}\left(\frac{I\bar{\eta}}{\delta_{\eta}}+\frac{\phi_{\eta}}{\theta_{\eta}}\right)\right]\right)\\
+&=&\exp\left(-\frac{1}{2}\left[\frac{I}{\delta_{\eta}}+\frac{1}{\theta_{\eta}}\right]\left[\nu_{\eta}^2-2\nu_{\eta}\left(\frac{I\bar{\eta}}{\delta_{\eta}}+\frac{\phi_{\eta}}{\theta_{\eta}}\right)\left(\frac{I}{\delta_{\eta}}+\frac{1}{\theta_{\eta}}\right)^{-1}\right]\right)\\
+\Rightarrow \nu_{\eta}|\cdot&\sim&\mbox{Normal}\left(\left(\frac{I\bar{\eta}}{\delta_{\eta}}+\frac{\phi_{\eta}}{\theta_{\eta}}\right)\left(\frac{I}{\delta_{\eta}}+\frac{1}{\theta_{\eta}}\right)^{-1},\left(\frac{I}{\delta_{\eta}}+\frac{1}{\theta_{\eta}}\right)^{-1}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\nu_{\eta}|\cdot &\sim& \mbox{Normal}\left(\left(\frac{I\bar{\eta}}{\delta_{\eta}}+2\right)\left(\frac{I}{\delta_{\eta}}+1\right)^{-1},\left(\frac{I}{\delta_{\eta}}+1\right)^{-1}\right)\\
+\end{eqnarray*}
+
+$\nu_{\alpha}$:\\
+The posterior for $\nu_{\alpha}$ is derived similarly to that for
+$\nu_{\eta}$.  As such, the derivation will not be included in the
+interest of saving space.
+\begin{eqnarray*}
+\nu_{\alpha}|\cdot&\sim&\mbox{Normal}\left(\left(\frac{I\bar{\alpha}}{\delta_{\alpha}}+\frac{\phi_{\alpha}}{\theta_{\alpha}}\right)\left(\frac{I}{\delta_{\alpha}}+\frac{1}{\theta_{\alpha}}\right)^{-1},\left(\frac{I}{\delta_{\alpha}}+\frac{1}{\theta_{\alpha}}\right)^{-1}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\nu_{\alpha}|\cdot&\sim&\mbox{Normal}\left(\left(\frac{I\bar{\alpha}}{\delta_{\alpha}}\right)\left(\frac{I}{\delta_{\alpha}}+4\right)^{-1},\left(\frac{I}{\delta_{\alpha}}+4\right)^{-1}\right)\\
+\end{eqnarray*}
+
+$\nu_{\beta}$:\\
+The posterior for $\nu_{\beta}$ is derived similarly to that for
+$\nu_{\eta}$.  As such, the derivation will not be included in the
+interest of saving space.
+\begin{eqnarray*}
+\nu_{\beta}|\cdot&\sim&\mbox{Normal}\left(\left(\frac{I\bar{\beta}}{\delta_{\beta}}+\frac{\phi_{\beta}}{\theta_{\beta}}\right)\left(\frac{I}{\delta_{\beta}}+\frac{1}{\theta_{\beta}}\right)^{-1},\left(\frac{I}{\delta_{\beta}}+\frac{1}{\theta_{\beta}}\right)^{-1}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\nu_{\beta}|\cdot&\sim&\mbox{Normal}\left(\left(\frac{I\bar{\beta}}{\delta_{\beta}}\right)\left(\frac{I}{\delta_{\beta}}+4\right)^{-1},\left(\frac{I}{\delta_{\beta}}+4\right)^{-1}\right)\\
+\end{eqnarray*}
+
+$\delta_{\eta}$:\\
+\begin{eqnarray*}
+f(\delta_{\eta}|\cdot)&\propto&\delta_{\eta}^{-\frac{I}{2}}\exp\left(-\frac{\sum_i(\eta_i-\nu_{\eta})^2}{2\delta_{\eta}}\right)\delta_{\eta}^{-a_{\eta}-1}\exp\left(-\frac{b_{\eta}}{\delta_{\eta}}\right)\\
+&=&\delta_{\eta}^{-\frac{I}{2}-a_{\eta}-1}\exp\left(-\frac{1}{\delta_{\eta}}\left[\frac{\sum_i(\eta_i-\nu_{\eta})^2}{2}+b_{\eta}\right]\right)\\
+\Rightarrow \delta_{\eta}|\cdot&\sim&\mbox{Inverse-Gamma}\left(\frac{I}{2}+a_{\eta},\frac{\sum_i(\eta_i-\nu_{\eta})^2}{2}+b_{\eta}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\delta_{\eta}|\cdot&\sim&\mbox{Inverse-Gamma}\left(\frac{I}{2}+2,\frac{\sum_i(\eta_i-\nu_{\eta})^2}{2}+\frac{1}{4}\right)\\
+\end{eqnarray*}
+
+$\delta_{\alpha}$:\\
+The posterior for $\delta_{\alpha}$ is derived similarly to that for
+$\delta_{\eta}$.  As such, the derivation will not be included in the
+interest of saving space.
+\begin{eqnarray*}
+\delta_{\alpha}|\cdot&\sim&\mbox{Inverse-Gamma}\left(\frac{I}{2}+a_{\alpha},\frac{\sum_i(\alpha_i-\nu_{\alpha})^2}{2}+b_{\alpha}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\delta_{\alpha}|\cdot&\sim&\mbox{Inverse-Gamma}\left(\frac{I}{2}+2,\frac{\sum_i(\alpha_i-\nu_{\alpha})^2}{2}+\frac{1}{4}\right)\\
+\end{eqnarray*}
+
+$\delta_{\beta}$:\\
+The posterior for $\delta_{\beta}$ is derived similarly to that for
+$\delta_{\eta}$.  As such, the derivation will not be included in the
+interest of saving space.
+\begin{eqnarray*}
+\delta_{\beta}|\cdot&\sim&\mbox{Inverse-Gamma}\left(\frac{I}{2}+a_{\beta},\frac{\sum_i(\beta_i-\nu_{\beta})^2}{2}+b_{\beta}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\delta_{\beta}|\cdot&\sim&\mbox{Inverse-Gamma}\left(\frac{I}{2}+2,\frac{\sum_i(\beta_i-\nu_{\beta})^2}{2}+\frac{1}{4}\right)\\
+\end{eqnarray*}
+
+
+\subsubsection{Specific Posterior Derivations}
+
+The model-specific posteriors are as follows.\\
+
+\subsubsection{Serial Model} 
+
+In this model, all $\gamma_i$ are equal to 0. Consequently, there is
+no need for estimation of either $\nu_{\gamma}$ or $\delta_{\gamma}$
+parameters, as they effectively do not exist for this model.\\
+
+
+\subsubsection{General Model}
+
+In this model, the prior distribution over each $\gamma_i$ parameter
+is similar to the priors for the $\eta_i$, $\alpha_i$, and $\beta_i$
+parameters.  As such, the posterior derivations for $\gamma_i$,
+$\nu_{\gamma}$, and $\delta_{\gamma}$ are similar to those for
+$\eta_i$, $\nu_{\eta}$, $\delta_{\eta}$, etc. and, consequently, are
+withheld in this section for space, with only the posteriors defined
+as follows.\\
+
+$\gamma_i$:\\
+\begin{eqnarray*}
+\gamma_i|\dots&\sim&\mbox{Normal}\left(\left(\frac{\sum_j\sum_k\sum_l\bar{y}_{ijk\ell}(-1)^{j+k}-L_{i\gamma}\eta_i-L_{i\beta}\alpha_i-L_{i\alpha}\beta_i}{\sigma^2}+\frac{\nu_{\gamma}}{\delta_{\gamma}}\right)\right.\\
+&&\left.\times\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\gamma}}\right)^{-1},\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\gamma}}\right)^{-1}\right)\\
+\end{eqnarray*}
+
+$\nu_{\gamma}$:\\
+\begin{eqnarray*}
+\nu_{\gamma}|\dots&\sim&\mbox{Normal}\left(\left(\frac{I\bar{\gamma}}{\delta_{\gamma}}+\frac{\phi_{\gamma}}{\theta_{\gamma}}\right)\left(\frac{I}{\delta_{\gamma}}+\frac{1}{\theta_{\gamma}}\right)^{-1},\left(\frac{I}{\delta_{\gamma}}+\frac{1}{\theta_{\gamma}}\right)^{-1}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\nu_{\gamma}|\dots&\sim&\mbox{Normal}\left(\left(\frac{I\bar{\gamma}}{\delta_{\gamma}}\right)\left(\frac{I}{\delta_{\gamma}}+4\right)^{-1},\left(\frac{I}{\delta_{\gamma}}+4\right)^{-1}\right)\\
+\end{eqnarray*}
+
+$\delta_{\gamma}$:\\
+\begin{eqnarray*}
+\delta_{\gamma}|\dots&\sim&\mbox{Inverse-Gamma}\left(\frac{I}{2}+a_{\gamma},\frac{\sum_i(\gamma_i-\nu_{\gamma})^2}{2}+b_{\gamma}\right)\\
+\end{eqnarray*}
+For the given priors,
+\begin{eqnarray*}
+\delta_{\gamma}|\dots&\sim&\mbox{Inverse-Gamma}\left(\frac{I}{2}+2,\frac{\sum_i(\gamma_i-\nu_{\gamma})^2}{2}+\frac{1}{4}\right)\\
+\end{eqnarray*}
+
+
+\subsubsection{Parallel Model}
+
+In this model, all $\gamma_i$ parameters follow a Truncated-Normal
+distribution that is limited between $-\infty$ and 0.  The density for
+$\gamma_i$ in this case is:
+\begin{eqnarray*}
+f(\gamma_i)&=&(2\pi\delta_{\gamma})^{-\frac{1}{2}}\exp\left(-\frac{(\gamma_i-\nu_{\gamma})^2}{2\delta_{\gamma}}\right)\mathcal{I}\left(\gamma_i<0\right)\Phi\left(\frac{0-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-1}\\
+&=&(2\pi\delta_{\gamma})^{-\frac{1}{2}}\exp\left(-\frac{(\gamma_i-\nu_{\gamma})^2}{2\delta_{\gamma}}\right)\mathcal{I}\left(\gamma_i<0\right)\Phi\left(\frac{-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-1}\\
+\end{eqnarray*}
+where $\mathcal{I}\left(\gamma_i<0\right)$ is an indicator function
+that is equal to 1 when $\gamma_i$ is less than 0 and is equal to 0
+otherwise and $\Phi$ is the cumulative density function of a standard
+normal distribution.\\
+
+$\gamma_i$:\\
+\begin{eqnarray*}
+f(\gamma_i|\dots)&\propto&\exp\left(-\frac{\sum_j\sum_k\sum_l\gamma_i^2-2y_{ijk\ell}\gamma_i(-1)^{j+k}+2\eta_i\gamma_i(-1)^{j+k}+2\alpha_i\gamma_i(-1)^k}{2\sigma^2}\right.\\
+&&\left.\frac{+2\beta_i\gamma_i(-1)^j}{}\right)\times\exp\left(-\frac{\gamma_i^2-2\gamma_i\nu_{\gamma}+\nu_{\gamma}^2}{2\delta_{\gamma}}\right)\mathcal{I}\left(\gamma_i<0\right)\\
+&\propto&\exp\left(-\frac{1}{2}\left[\gamma_i^{2}\left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\gamma}}\right)-2\gamma_i\left(\frac{\sum_j\sum_k\sum_ly_{ijk\ell}-L_{i\gamma}\eta_i-L_{i\beta}\alpha_i-L_{i\alpha}\beta_i}{\sigma^2}\right.\right.\right.\\
+&&\left.\left.\left.+\frac{\nu_{\gamma}}{\delta_{\gamma}}\right)\right]\right)\mathcal{I}\left(\gamma_i<0\right)\\
+\Rightarrow\gamma_i|\dots3&\sim&\mbox{Truncated-Normal}\left(\nu_{\gamma}',\delta_{\gamma}',\left\{-\infty,\cdots,0\right\}\right)
+\end{eqnarray*}
+for $\displaystyle{\delta_{\gamma}' = \left(\frac{L_{i\cdot\cdot}}{\sigma^2}+\frac{1}{\delta_{\gamma}}\right)^{-1}}$ and $\displaystyle{\nu_{\gamma}' = \left(\frac{\sum_j\sum_k\sum_ly_{ijk\ell}-L_{i\gamma}\eta_i-L_{i\beta}\alpha_i-L_{i\alpha}\beta_i}{\sigma^2}+\frac{\nu_{\gamma}}{\delta_{\gamma}}\right)\delta_{\gamma}'}$\\
+
+$\nu_{\gamma}$:\\
+\begin{eqnarray*}
+f(\nu_{\gamma}|\dots)&\propto&\exp\left(-\frac{\sum_i\left(\gamma_i-\nu_{\gamma}\right)^2}{2\delta_{\gamma}}\right)\Phi\left(\frac{-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-I}\exp\left(-\frac{(\nu_{\gamma}-\phi_{\gamma})^2}{2\theta_{\gamma}}\right)\\
+&=&\exp\left(-\frac{1}{2}\left[\frac{\sum_i\gamma_i^2-2\gamma_i\nu_{\gamma}+\nu_{\gamma}^2}{\delta_{\gamma}}+\frac{\nu_{\gamma}^2-2\nu_{\gamma}\phi_{\gamma}+\phi_{\gamma}^2}{\theta_{\gamma}}\right]\right)\Phi\left(\frac{-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-I}\\
+&\propto&\exp\left(-\frac{1}{2}\left[\frac{-2\nu_{\gamma}I\bar{\gamma}+I\nu_{\gamma}^2}{\delta_{\gamma}}+\frac{\nu_{\gamma}^2-2\nu_{\gamma}\phi_{\gamma}}{\theta_{\gamma}}\right]\right)\Phi\left(\frac{-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-I}\\
+&=&\exp\left(-\frac{1}{2}\left[\nu_{\gamma}^2\left(\frac{I}{\delta_{\gamma}}+\frac{1}{\theta_{\gamma}}\right)-2\nu_{\gamma}\left(\frac{I\bar{\gamma}}{\delta_{\gamma}}+\frac{\phi_{\gamma}}{\theta_{\gamma}}\right)\right]\right)\Phi\left(\frac{-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-I}\\
+\end{eqnarray*}
+This distribution is not a Normal distribution.  Thus, the Normal
+distribution is not a conjugate prior for this parameter.  This
+distribution is also not of a commonly known form, as no common
+distribution has a density composed of a product of a Standard Normal
+density function scales by a Standard Normal CDF.  Consequently,
+Metropolis-Hastings sampling is needed to estimate this parameter.
+Also, keep in mind that, because of the sign in the normalizing
+constant from the truncated distribution, positive values of
+$\nu_{\gamma}$ are weighted more heavily than negative values, even
+though all values of $\gamma_i$ in this model are negative.  This may
+prove to be problematic as this may result in the chain failing to
+converge on a final estimate, possibly leading to non-identifiability
+in the $\gamma_i$ and $\delta_{\gamma}$ posteriors.\\
+
+$\delta_{\gamma}$:\\
+\begin{eqnarray*}
+f(\delta_{\gamma}|\dots)&\propto&(\delta_{\gamma})^{-\frac{I}{2}}\exp\left(-\frac{\sum_i(\gamma_i-\nu_{\gamma})^2}{2\delta_{\gamma}}\right)\Phi\left(\frac{-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-I}\delta_{\gamma}^{-a_{\gamma}-1}\exp\left(-\frac{b_{\gamma}}{\delta_{\gamma}}\right)\\
+&=&\delta_{\gamma}^{-\frac{I}{2}-a_{\gamma}-1}\exp\left(-\frac{1}{\delta_{\gamma}}\left[\frac{\sum_i(\gamma_i-\nu_{\gamma})^2}{2}+b_{\gamma}\right]\right)\Phi\left(\frac{-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-I}\\
+\end{eqnarray*}
+This distribution is not an Inverse-Gamma.  This, the Inverse-Gamma
+distribution is not a conjugate prior for this parameter.  This
+distribution is also not of a commonly known form, as no common
+distribution has a density composed of a product of an Inverse-Gamma
+density function scales by a Standard Normal CDF.  Consequently,
+Metropolis-Hastings sampling is needed to estimate this parameter.
+
+%Although the resulting posterior for $\gamma_i$ is also a
+%Truncated-Normal and, thus, implies that the Truncated-Normal is a
+%conjugate prior for $\gamma_i$, this does not hold for $\nu_{\gamma}$
+%or for $\delta_{\gamma}$.  More importantly, the posteriors for
+%$\nu_{\gamma}$ and $\delta_{\gamma}$ are not of a commonly-known form
+%and, consequently, do not have well-known normalizing constants.  As
+%such, Metropolis-Hastings steps will be needed to estimate these
+%parameters for this model.\\
+
+
+\subsubsection{Coactive Model}
+
+Aside from the support set for the $\gamma_i$ parameters, this model
+is identical to the parallel model.  As such, the derivations are, for
+the most part, identical.  The only difference is in the normalizing
+constants used in the truncated-normal distributions, as illustrated
+here:
+\begin{eqnarray*}
+f(\gamma_i)&=&(2\pi\delta_{\gamma})^{-\frac{1}{2}}\exp\left(-\frac{(\gamma_i-\nu_{\gamma})^2}{2\delta_{\gamma}}\right)\mathcal{I}\left(\gamma_i>0\right)\left(1-\Phi\left(\frac{0-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)\right)^{-1}\\
+&=&(2\pi\delta_{\gamma})^{-\frac{1}{2}}\exp\left(-\frac{(\gamma_i-\nu_{\gamma})^2}{2\delta_{\gamma}}\right)\mathcal{I}\left(\gamma_i>0\right)\Phi\left(\frac{\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-1}\\
+\end{eqnarray*}
+with the values of 1 and 0 returned by the indicator function
+corresponding to values of gamma greater than and not greater than 0,
+respectively, and with the sign of the term in the Standard-Normal CDF
+term switched.\\
+
+Because of this similarity, only the posterior distributions are
+listed here.  Note that this means the posterior distributions for
+$\nu_{\gamma}$ and $\delta_{\gamma}$ in this model are also neither
+conjugate nor of known form, necessitating Metropolis-Hastings steps
+for estimation and potentially encountering the same failures.\\
+
+$\gamma_i$:\\
+\begin{eqnarray*}
+\gamma_i|\dots&\sim&\mbox{Truncated-Normal}\left(\nu_{\gamma}',\delta_{\gamma}',\left\{0,\cdots,\infty\right\}\right)
+\end{eqnarray*}
+
+$\nu_{\gamma}$:\\
+\begin{eqnarray*}
+f(\nu_{\gamma}|\dots)&\propto&\exp\left(-\frac{1}{2}\left[\nu_{\gamma}^2\left(\frac{I}{\delta_{\gamma}}+\frac{1}{\theta_{\gamma}}\right)-2\nu_{\gamma}\left(\frac{I\bar{\gamma}}{\delta_{\gamma}}+\frac{\phi_{\gamma}}{\theta_{\gamma}}\right)\right]\right)\Phi\left(\frac{\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-I}\\
+\end{eqnarray*}
+
+$\delta_{\gamma}$:\\
+\begin{eqnarray*}
+f(\delta_{\gamma}|\dots)&\propto&\delta_{\gamma}^{-\frac{I}{2}-a_{\gamma}-1}\exp\left(-\frac{1}{\delta_{\gamma}}\left[\frac{\sum_i(\gamma_i-\nu_{\gamma})^2}{2}+b_{\gamma}\right]\right)\Phi\left(\frac{-\nu_{\gamma}}{\sqrt{\delta_{\gamma}}}\right)^{-I}\\
+\end{eqnarray*}
+
+%\end{document}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Gamma Model}
+%% Gamma Model Derivation from Dissertation
+%\documentclass[12pt]{report}
+%\begin{document}
+
+For $i = 1,...I$, $j = 1,2$, $k= 1,2$, $l = 1,...,L_{ijk}$, $m = 1,...,4$,
+the common assumptions are as follows:\\
+\begin{eqnarray*}
+y_{ijk\ell} &\sim& \mbox{Gamma}\left(\theta,\mu_{ijk}\right)\\
+\mu_{ijk} &=& \eta_i + \alpha_i\left(-1\right)^j + \beta_i 
+\left(-1\right)^k + \gamma_i \left(-1\right)^{j+k}\\
+\theta &\sim& \mbox{Gamma}(\kappa_\theta,\tau_\theta)\\
+\eta_i &\sim& \mbox{Gamma}(\kappa_\eta,\tau_\eta)\\
+\alpha_i &\sim& \mbox{Normal}(\nu_\alpha,\epsilon_\alpha)\\
+\beta_i &\sim& \mbox{Normal}(\nu_\beta,\epsilon_\beta)\\
+%\gamma_i &\sim& \mbox{GM}(m,\nu_\gamma,\epsilon_\gamma)\\
+\nu_\alpha &\sim& \mbox{Normal}(\zeta_\alpha,\lambda_\alpha)\\
+\nu_\beta &\sim& \mbox{Normal}(\zeta_\beta,\lambda_\beta)\\
+%\nu_\gamma &\sim& \mbox{Normal}(\zeta_\gamma,\lambda_\gamma)\\
+\epsilon_\alpha &\sim& \mbox{Inverse-Gamma}(\kappa_\alpha,\tau_\alpha)\\
+\epsilon_\beta &\sim& \mbox{Inverse-Gamma}(\kappa_\beta,\tau_\beta)\\
+%\epsilon_\gamma &\sim& \mbox{Inverse-Gamma}(\kappa_\gamma,\tau_\gamma)\\
+\end{eqnarray*}
+%where $\mbox{GM}(m,\nu_\gamma,\epsilon_\gamma)$ is defined as follows:\\
+%\begin{eqnarray*}
+%\mbox{GM}\left(m,\nu_\gamma,\epsilon_\gamma\right) &=&\left\{
+%\begin{array}{ccl}
+%\mbox{Degenerate}(0)&\mbox{for}&m=1\\
+%\mbox{Normal}\left(\nu_\gamma,\epsilon_\gamma\right)&\mbox{for}&m=2\\
+%\mbox{Truncated-Normal}\left(\nu_\gamma,\epsilon_\gamma,(-\infty,0
+%]\right)&\mbox{for}&m=3\\
+%\mbox{Truncated-Normal}\left(\nu_\gamma,\epsilon_\gamma,[0,\infty
+%)\right)&\mbox{for}&m=4\\
+%\end{array}\right.
+%\end{eqnarray*}
+In this framework, $\eta_i$ follows a Gamma distribtion instead of a
+Normal distribution as an attempt to keep the (typically largest
+portion of the) scale parameter positive.  However, aside from making
+a slight change to how $\eta_i$ is sampled, this has no substantial
+effect on the other parameters.
+%\newpage
+
+As in the Normal framework, the specific model assumptions are as follows:
+
+\subsubsection{Serial Model}
+Because the MIC predicted by serial processing is zero, this model
+assumes that all interaction parameters, $\gamma_i$ are exactly zero.
+Because these parameters are all constant, there is no need for any
+further hierarchical specification in this model.
+
+\subsubsection{General Model}
+The general model places minimal constraint on the possible range of
+the interaction parameters.  For the purposes of this current
+research, we will assume that the interaction parameters each follow a
+normal distribution with a hierarchical structure described as follows:
+\begin{eqnarray*}
+\gamma_i &\sim& \mbox{Normal}\left(\nu_\gamma,\epsilon_\gamma\right)\\
+\nu_\gamma &\sim& \mbox{Normal}\left(\zeta_\gamma,\lambda_\gamma\right)\\
+\epsilon_\gamma &\sim& \mbox{Inverse-Gamma}\left(\kappa_\gamma,\tau_\gamma\right)\\
+\end{eqnarray*}
+where $\zeta_\gamma$, $\lambda_\gamma$, $\kappa_\gamma$, and
+$\tau_\gamma$ are hyperparameters that are specified before analysis.
+It should be noted that the assumptions in this model are very similar
+to those in the next two models.  The only major change is in the
+distribution of the interaction parameter itself, with the hyperpriors
+on $\nu_\gamma$ and $\epsilon_\gamma$ remaining the same.  As such,
+only the change to the distribution to $\gamma_i$ will be noted.
+
+\subsubsection{Parallel Model}
+Because parallel processing predicts negative MICs, this model assumes
+that all interaction parameters must be negative.  This is
+accomplished by the following restriction:
+\begin{eqnarray*}
+\gamma_i &\sim& \mbox{Truncated-Normal}\left(\nu_\gamma,\epsilon_\gamma,(-\infty,0]\right)
+\end{eqnarray*}
+with $(-\infty,0]$ being the support set for these truncated
+distributions.  This limitation to the support set constitutes the
+sign constraint needed for this model and only allows interaction
+parameters to equal zero in order to allow for Savage-Dickey
+estimation.
+
+\subsubsection{Coactive Model}
+Because coactive processing predicts positive MICs, this model assumes
+that all interaction parameters must be positive.  This is
+accomplished by the following restriction:
+\begin{eqnarray*}
+\gamma_i &\sim& \mbox{Truncated-Normal}\left(\nu_\gamma,\epsilon_\gamma,[0,\infty)\right)
+\end{eqnarray*}
+with $[0,\infty)$ being the support set for these truncated
+distributions.  This limitation to the support set constitutes the
+sign constraint needed for this model and only allows interaction
+parameters to equal zero in order to allow for Savage-Dickey
+estimation.
+
+
+\subsubsection{Joint Distribution and Posterior Derivation of Common Parameters}
+Because the common parameters are independent of the specific
+parameters and only depend on them when they are assumed to be known,
+the priors for the model-specific parameters are effectively
+normalizing constants that can be dropped during derivation up to
+proportionality.  As such, those distributions are of no interest to
+the current joint analysis and will be omitted.  Consequently, the
+joint distribution of all common parameters is as follows:\\
+%\begin{center}
+\begin{eqnarray*}
+&\displaystyle{f\left(Y,\theta,\vec{\eta},\vec{\alpha},\vec{\beta},\nu_\alpha,\nu_\beta,\epsilon_\alpha,\epsilon_\beta\right)}&\\
+&\displaystyle{=\left(\prod_i\prod_j\prod_k\prod_l(\mu_{ijk})^{-\theta}\Gamma(\theta)^{-1}(y_{ijk\ell})^{\theta-1}\exp\left(-\frac{y_{ijk\ell}}{\mu_{ijk}}\right)\right)\times}&\\
+&\displaystyle{(\tau_\theta)^{-\kappa_\theta}\Gamma(\kappa_\theta)^{-1}(\theta)^{\kappa_\theta-1}\exp\left(-\frac{\theta}{\tau_\theta}\right)\times\left(\prod_i(\tau_\eta)^{-\kappa_\eta}\Gamma(\kappa_\eta)^{-1}(\eta_i)^{\kappa_\eta-1}\exp\left(-\frac{\eta_i}{\tau_\eta}\right)\right)\times}&\\
+&\displaystyle{\left(\prod_i(2\pi\epsilon_\alpha)^{-\frac{1}{2}}\exp\left(-\frac{(\alpha_i-\nu_\alpha)^2}{2\epsilon_\alpha}\right)\right)\times\left(\prod_i(2\pi\epsilon_\beta)^{-\frac{1}{2}}\exp\left(-\frac{(\beta_i-\nu_\beta)^2}{2\epsilon_\beta}\right)\right)\times}&\\
+&\displaystyle{(2\pi\lambda_\alpha)^{-\frac{1}{2}}\exp\left(-\frac{(\nu_\alpha-\zeta_\alpha)^2}{2\lambda_\alpha}\right)\times(2\pi\lambda_\beta)^{-\frac{1}{2}}\exp\left(-\frac{(\nu_\beta-\zeta_\beta)^2}{2\lambda_\beta}\right)\times}&\\
+&\displaystyle{(\tau_\alpha)^{\kappa_\alpha}\Gamma(\kappa_\alpha)^{-1}(\epsilon_\alpha)^{-\kappa_\alpha-1}\exp\left(-\frac{\tau_\alpha}{\epsilon_\alpha}\right)\times(\tau_\beta)^{\kappa_\beta}\Gamma(\kappa_\beta)^{-1}(\epsilon_\beta)^{-\kappa_\beta-1}\exp\left(-\frac{\tau_\beta}{\epsilon_\beta}\right)\times}&\\
+\end{eqnarray*}
+%\end{center}
+
+Unfortunately, none of the prior distributions are conjugate priors,
+nor are most of the hyperprior distributions.  More importantly, most
+of the conditional posterior distributions do not have a
+frequently-used functional form, as can be seen from the example
+below.  Consequently, most of the chains for this framework will rely
+largely on Metropolis steps to generate adequate samples.
+
+An example of the general lack of a clean functional form can be seen
+in the posterior distribution of $\alpha_i$:
+\begin{eqnarray*}
+\displaystyle{f(\alpha_i|\cdot)}&\propto&\displaystyle{\left(\prod_j\prod_k\prod_l(\mu_{ijk})^{-\theta}\exp\left(-\frac{y_{ijk\ell}}{\mu_{ijk}}\right)\right)\times\exp\left(-\frac{(\alpha_i-\nu_\alpha)^2}{2\epsilon_\alpha}\right)}\\
+&=&\displaystyle{\left(\prod_j\prod_k\prod_l(\eta_i + \alpha_i\left(-1\right)^j + \beta_i \left(-1\right)^k + \gamma_i \left(-1\right)^{j+k})^{-\theta}\right.}\\
+&&\displaystyle{\left.\exp\left(-\frac{y_{ijk\ell}}{\eta_i + \alpha_i\left(-1\right)^j + \beta_i \left(-1\right)^k + \gamma_i \left(-1\right)^{j+k}}\right)\right)\times}\\
+&&\displaystyle{\exp\left(-\frac{(\alpha_i-\nu_\alpha)^2}{2\epsilon_\alpha}\right)}\\
+\end{eqnarray*}
+The main problem is the $(\mu_{ijk})^{-\theta}$ term, which becomes
+more complex as $\theta$ increases and, for $\theta \neq 1$, prevents
+separation of any component from the others.  This might not be as
+much of an issue if $\theta$ is held constant, which will be done in
+current work as earlier Gamma framework development has found that
+chain estimates of the $\theta$ parameter seem to climb until the
+sample space for the parameters of interest becomes too small to
+analyze, but derivation of the posterior distribution was still done
+in the interest of future refinement.  Because this is a common issue
+for all parameters (and because the other parameters have similarly
+non-standard posterior distributions), the posterior distributions for
+most parameters are omitted here for brevity and, along with the
+analysis code, will be included in supplementary materials for any
+interested parties.  However, the posterior distributions for the
+model-specific interaction terms will be included subsequently for
+reference.
+
+\subsubsection{Specific Posterior Derivations}
+The posterior distributions for the hierarchical paramters,
+$\nu_\gamma$ and $\epsilon_\gamma$ in the Gamma framework are
+effectively identical to their Normal framework counterparts,
+$\nu_\gamma$ and $\delta_\gamma$, respectively, as the specific
+distributions involved are the same.  Consequently, the reader is
+referred to their derivation in the previous chapter, and only the
+posterior distribution for the interaction parameters themselves will
+be included here.\\
+
+\subsubsection{Serial Model}
+Just like in the Normal framework, the Serial model assumes that all
+interaction parameters, $\gamma_i$, are equal to 0.  As such, there is
+no need to estimate either $\nu_\gamma$ or $\epsilon_\gamma$, as they
+effectively do not exist for this model.\\
+
+\subsubsection{General Model}
+In this model, the prior distribution over each $\gamma_i$ parameter
+is similar to the priors for the $\alpha_i$ (described above) and
+$\beta_i$ parameters.  As such, the posterior derivations for
+$\gamma_i$ are also similar to the posteriors for $\alpha_i$ and
+$\beta_i$:
+
+%JON - DERIVATION
+\begin{eqnarray*}
+\displaystyle{f(\gamma_i|\cdot)}&\propto&\displaystyle{\left(\prod_j\prod_k\prod_l(\mu_{ijk})^{-\theta}\exp\left(-\frac{y_{ijk\ell}}{\mu_{ijk}}\right)\right)\times\exp\left(-\frac{(\gamma_i-\nu_\gamma)^2}{2\epsilon_\gamma}\right)}\\
+&=&\displaystyle{\left(\prod_j\prod_k\prod_l(\eta_i + \alpha_i\left(-1\right)^j + \beta_i \left(-1\right)^k + \gamma_i \left(-1\right)^{j+k})^{-\theta}\right.}\\
+&&\displaystyle{\left.\exp\left(-\frac{y_{ijk\ell}}{\eta_i + \alpha_i\left(-1\right)^j + \beta_i \left(-1\right)^k + \gamma_i \left(-1\right)^{j+k}}\right)\right)\times}\\
+&&\displaystyle{\exp\left(-\frac{(\gamma_i-\nu_\gamma)^2}{2\epsilon_\gamma}\right)}\\
+\end{eqnarray*}
+This derivation is not extended much further because, as described
+earlier, there is no simple expansion of the $(\mu_{ijk})^{-\theta}$
+term when $\theta$ is not constant.  Additionally, because this term
+is multiplied across iterations within conditions, the actual scale of
+the exponent is substantially larger than $\theta$, further
+complicating any attempt at expansion.  However, it must be noted that
+the un-normalized posterior density is still easy to calculate as it
+is effectively proportional to the product of a normal density and a
+series of gamma densities, with all parameters known.
+
+
+\subsubsection{Parallel Model}
+In this model, all $\gamma_i$ parameters follow a Truncated-Normal
+distribution that is limited between $-\infty$ and 0.  The density for
+$\gamma_i$ in this case is:
+
+\begin{eqnarray*}
+\displaystyle{f(\gamma_i|\cdot)}&\propto&\displaystyle{\left(\prod_j\prod_k\prod_l(\mu_{ijk})^{-\theta}\exp\left(-\frac{y_{ijk\ell}}{\mu_{ijk}}\right)\right)\times\exp\left(-\frac{(\gamma_i-\nu_\gamma)^2}{2\epsilon_\gamma}\right)\times\mathcal{I}\left(\gamma_i<0\right)}\\
+&=&\displaystyle{\left(\prod_j\prod_k\prod_l(\eta_i + \alpha_i\left(-1\right)^j + \beta_i \left(-1\right)^k + \gamma_i \left(-1\right)^{j+k})^{-\theta}\right.}\\
+&&\displaystyle{\left.\exp\left(-\frac{y_{ijk\ell}}{\eta_i + \alpha_i\left(-1\right)^j + \beta_i \left(-1\right)^k + \gamma_i \left(-1\right)^{j+k}}\right)\right)\times}\\
+&&\displaystyle{\exp\left(-\frac{(\gamma_i-\nu_\gamma)^2}{2\epsilon_\gamma}\right)\times\mathcal{I}\left(\gamma_i<0\right)}\\
+\end{eqnarray*}
+
+Aside from the indicator function used to enforce the restriction, the
+posterior distribution is effectively identical to that of the General
+Model.  Because of this, this density can be calculated in roughly the
+same manner.
+
+
+\subsubsection{Coactive Model}
+Aside from the support set for the $\gamma_i$ parameters, this model
+is identical to the parallel model.  As such, the derivations are, for
+the most part, identical.  The only differences are in the indicator
+function and Normal-distribution CDF used in the truncated-normal
+distributions, with only the indicator being included in the posterior
+distribution as the CDF correction does not explicitly depend on
+$\gamma_i$ and, consequently, is constant with respect to it.  Because
+of this similarity, only the posterior distribution is listed here.
+
+\begin{eqnarray*}
+\displaystyle{f(\gamma_i|\cdot)}&\propto&\displaystyle{\left(\prod_j\prod_k\prod_l(\eta_i + \alpha_i\left(-1\right)^j + \beta_i \left(-1\right)^k + \gamma_i \left(-1\right)^{j+k})^{-\theta}\right.}\\
+&&\displaystyle{\left.\exp\left(-\frac{y_{ijk\ell}}{\eta_i + \alpha_i\left(-1\right)^j + \beta_i \left(-1\right)^k + \gamma_i \left(-1\right)^{j+k}}\right)\right)\times}\\
+&&\displaystyle{\exp\left(-\frac{(\gamma_i-\nu_\gamma)^2}{2\epsilon_\gamma}\right)\times\mathcal{I}\left(\gamma_i>0\right)}\\
+\end{eqnarray*}
+
+Again, because this is proportional to a product of a few well-known
+distributions, this functional form is relatively easy to calculate,
+even though the normalizing constant is not known.
+
+%\end{document}
+

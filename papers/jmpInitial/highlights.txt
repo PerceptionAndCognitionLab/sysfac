@@ -1,0 +1,9 @@
+1. We propose a set of Bayesian hierarchical models for systems factorial technology that capture commonalities in architecture across individuals
+
+2. We develop analysis including Bayes factor model-comparison algorithms
+
+3. We investigate whether chunking in working memory changes processing architecture
+
+4. We find that there is no difference in architecture across memory and perception tasks,  and find that participants all use the same processing architecture.
+
+ 
